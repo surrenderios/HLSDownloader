@@ -1,0 +1,1 @@
+../../../M3U8Kit/Source/Categories/NSURL+m3u8.h
