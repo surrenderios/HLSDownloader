@@ -7,15 +7,10 @@
 //
 
 #import "HLSDownloadOperation.h"
+#import <CommonCrypto/CommonDigest.h>
 
 #import <M3U8Kit/M3U8Kit.h>
 #import <NSURL+m3u8.h>
-
-typedef NS_ENUM(NSUInteger, HLSOperationState){
-    HLSOperationStateReady,
-    HLSOperationStateExcuting,
-    HLSOperationStateFinished,
-};
 
 NSString *const HLSDownloadErrorDomain = @"HLSDownloadErrorDomain";
 
@@ -26,18 +21,20 @@ NSError *HLSErrorWithType(NSUInteger type){
 }
 
 @interface HLSDownloadOperation ()<NSURLSessionDownloadDelegate>
+
 @property (nonatomic, copy) NSString *urlString;
-@property (nonatomic, assign) NSUInteger tsStartIndex;
+@property (nonatomic, assign) NSUInteger tsIndex;
 
 @property (nonatomic, strong) M3U8PlaylistModel *m3u8Model;
 // 由第一个分片的大小*分片的数量来预估,
-@property (nonatomic, assign) long long fileSize;
+@property (nonatomic, assign) int64_t fileSize;
 
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSURLSessionDownloadTask *curTask;
 
 @property (nonatomic, assign) NSTimeInterval lastWriteTime;
-@property (nonatomic, assign) long long byteWriten;
+@property (nonatomic, assign) int64_t singleTsByteWriten;
+@property (nonatomic, assign) int64_t totalTsByteDownload;
 
 @property (nonatomic, assign) HLSOperationState opState;
 @end
@@ -53,8 +50,9 @@ NSError *HLSErrorWithType(NSUInteger type){
 {
     if (self = [super init]) {
         _urlString = urlString;
-        _tsStartIndex =  startIndex;
+        _tsIndex =  startIndex;
         _opState = HLSOperationStateReady;
+        _opUniqueId = [self md5NameForUrlString:urlString];
     }
     return self;
 }
@@ -124,6 +122,10 @@ NSError *HLSErrorWithType(NSUInteger type){
 
 - (void)setOpState:(HLSOperationState)opState
 {
+    if (self.opState == opState) {
+        return;
+    }
+    
     NSString *oldKeyPath = [self keyPathFromOpState:self.opState];
     NSString *newKeyPath = [self keyPathFromOpState:opState];
     
@@ -132,6 +134,12 @@ NSError *HLSErrorWithType(NSUInteger type){
     _opState = opState;
     [self didChangeValueForKey:oldKeyPath];
     [self didChangeValueForKey:newKeyPath];
+    
+    if([self.delegate respondsToSelector:@selector(hlsDownloadOperation:downloadStatusChanged:)]){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate hlsDownloadOperation:self downloadStatusChanged:self.opState];
+        });
+    }
 }
 
 - (NSString *)keyPathFromOpState:(HLSOperationState)state
@@ -165,8 +173,10 @@ NSError *HLSErrorWithType(NSUInteger type){
 - (void)startDownloadM3u8
 {
     if (self.urlString.length == 0) {
-        if (self.m3u8Block) {
-            self.m3u8Block(self.urlString, nil, HLSErrorWithType(0));
+        if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:m3u8:error:)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate hlsDownloadOperation:self m3u8:nil error:HLSErrorWithType(0)];
+            });
         }
     }else{
         NSURL *url = [NSURL URLWithString:self.urlString];
@@ -175,8 +185,10 @@ NSError *HLSErrorWithType(NSUInteger type){
                 self.m3u8Model = model;
                 [self startDownloadTs];
             }
-            if (self.m3u8Block) {
-                self.m3u8Block(self.urlString, model, error);
+            if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:m3u8:error:)]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                   [self.delegate hlsDownloadOperation:self m3u8:nil error:nil];
+                });
             }
         }];
     }
@@ -186,8 +198,8 @@ NSError *HLSErrorWithType(NSUInteger type){
 - (void)startDownloadTs
 {
     M3U8SegmentInfoList *tsList = self.m3u8Model.mainMediaPl.segmentList;
-    if (self.tsStartIndex < tsList.count) {
-        M3U8SegmentInfo *segInfo = [tsList segmentInfoAtIndex:self.tsStartIndex];
+    if (self.tsIndex < tsList.count) {
+        M3U8SegmentInfo *segInfo = [tsList segmentInfoAtIndex:self.tsIndex];
         if (segInfo.mediaURL) {
             [self startDownloadTsWithUrl:segInfo.mediaURL];
         }
@@ -206,35 +218,18 @@ NSError *HLSErrorWithType(NSUInteger type){
 #pragma mark - NSURLSessionDelegate
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error;
 {
-    if (self.failedBlock) {
-        self.failedBlock(self.urlString, self.tsStartIndex, error);
-    }
+    [self callFailedDelegateWithError:error];
 }
 
-/* If an application has received an
- * -application:handleEventsForBackgroundURLSession:completionHandler:
- * message, the session delegate will receive this message to indicate
- * that all messages previously enqueued for this session have been
- * delivered.  At this time it is safe to invoke the previously stored
- * completion handler, or to begin any internal updates that will
- * result in invoking the completion handler.
- */
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session API_AVAILABLE(ios(7.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
 {
     
 }
 #pragma mark - NSURLSessionTaskDelegate
-/* Sent as the last message related to a specific task.  Error may be
- * nil, which implies that no error occurred and this task is complete.
- */
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error;
 {
-    if (error) {
-        if (self.failedBlock) {
-            self.failedBlock(self.urlString, self.tsStartIndex, error);
-        }
-    }
+    [self callFailedDelegateWithError:error];
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
@@ -245,33 +240,33 @@ didReceiveResponse:(NSURLResponse *)response
 }
 
 #pragma mark - NSURLSessionDownloadDelegate
-
-/* Sent when a download task that has completed a download.  The delegate should
- * copy or move the file at the given location to a new location as it will be
- * removed when the delegate message returns. URLSession:task:didCompleteWithError: will
- * still be called.
- */
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location;
 {
-    if (self.tsBlock) {
-        self.tsBlock(self.urlString, downloadTask.originalRequest.URL, location.absoluteString, self.tsStartIndex, YES);
+    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:tsDownloadedIn:fromRemoteUrl:toLocal:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate hlsDownloadOperation:self tsDownloadedIn:self.tsIndex fromRemoteUrl:downloadTask.originalRequest.URL toLocal:location];
+        });
     }
     
+    self.tsIndex ++;
+    self.singleTsByteWriten = 0;
+    self.lastWriteTime = 0;
     [self startDownloadTs];
 }
 
-/* Sent periodically to notify the delegate of download progress. */
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
       didWriteData:(int64_t)bytesWritten
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
 {
-    if (self.progressBlock) {
+    self.totalTsByteDownload = self.totalTsByteDownload + bytesWritten;
+    
+    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:downloadedSize:totalSize:)]) {
         [self calculateProgress:totalBytesWritten all:totalBytesExpectedToWrite];
     }
     
-    if (self.speedBlock) {
+    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:estimateSpeed:)]) {
         [self calculateSpeed:totalBytesWritten];
     }
 }
@@ -281,38 +276,74 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
 {
     if (self.fileSize == 0) {
         self.fileSize = self.m3u8Model.mainMediaPl.segmentList.count * totalBytesExpectedToWrite;
+        
+        if (self.tsIndex != 0) {
+            self.totalTsByteDownload = self.tsIndex * totalBytesExpectedToWrite;
+        }
     }
     
-    NSProgress *progress = [[NSProgress alloc] init];
-    progress.totalUnitCount = self.fileSize;
-    progress.completedUnitCount = totalBytesWritten;
-    
-    self.progressBlock(self.urlString, progress);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate hlsDownloadOperation:self downloadedSize:self.totalTsByteDownload totalSize:self.fileSize];
+    });
 }
 
 - (void)calculateSpeed:(int64_t)totalBytesWritten
 {
-    if (!self.lastWriteTime) {
+    if (self.lastWriteTime == 0 || self.singleTsByteWriten == 0) {
         self.lastWriteTime = CFAbsoluteTimeGetCurrent();
-    }else{
-        NSTimeInterval time = CFAbsoluteTimeGetCurrent() - self.lastWriteTime;
-        int64_t deltaSize = totalBytesWritten - self.byteWriten;
-        if (deltaSize > 0) {
-            int64_t kbSize = deltaSize / 1024;
-            NSString *speedDes;
-            if(kbSize < 1024){
-                float speed = kbSize/time;
-                speedDes = [NSString stringWithFormat:@"%.2f KB/S",speed];
-            }else{
-                float speed = kbSize / 1024 / time;
-                speedDes = [NSString stringWithFormat:@"%.2f M/S",speed];
-            }
-            self.lastWriteTime = CFAbsoluteTimeGetCurrent();
-            
-            self.speedBlock(self.urlString, speedDes);
-        }
+        self.singleTsByteWriten = totalBytesWritten;
+        return;
     }
     
-    self.byteWriten = totalBytesWritten;
+    NSTimeInterval time = CFAbsoluteTimeGetCurrent() - self.lastWriteTime;
+    int64_t deltaSize = totalBytesWritten - self.singleTsByteWriten;
+    if (deltaSize > 0) {
+        float speed = deltaSize / 1024 / time;
+        NSString *speedDes = nil;
+        if(speed >= 1024){
+            speed = speed / 1024;
+            speedDes = [NSString stringWithFormat:@"%.2f M/S",speed];
+        }else{
+            speedDes = [NSString stringWithFormat:@"%.2f KB/S",speed];
+        }
+        self.lastWriteTime = CFAbsoluteTimeGetCurrent();
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate hlsDownloadOperation:self estimateSpeed:speedDes];
+        });
+    }
+    self.singleTsByteWriten = totalBytesWritten;
+}
+
+- (void)callFailedDelegateWithError:(NSError *)error
+{
+    if (!error) {
+        return;
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:failedAtIndex:error:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate hlsDownloadOperation:self failedAtIndex:self.tsIndex error:error];
+        });
+    }
+}
+
+- (NSString *)md5NameForUrlString:(nullable NSString *)key {
+    const char *str = key.UTF8String;
+    if (str == NULL) {
+        str = "";
+    }
+    unsigned char r[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), r);
+    NSURL *keyURL = [NSURL URLWithString:key];
+    NSString *ext = keyURL ? keyURL.pathExtension : key.pathExtension;
+    // File system has file name length limit, we need to check if ext is too long, we don't add it to the filename
+    if (ext.length > (NAME_MAX - CC_MD5_DIGEST_LENGTH * 2 - 1)) {
+        ext = nil;
+    }
+    NSString *filename = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%@",
+                          r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
+                          r[11], r[12], r[13], r[14], r[15], ext.length == 0 ? @"" : [NSString stringWithFormat:@".%@", ext]];
+    return filename;
 }
 @end

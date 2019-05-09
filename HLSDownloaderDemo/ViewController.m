@@ -10,7 +10,10 @@
 #import <HLSDownloader/HLSDownloader.h>
 #import <HLSDownloader/HLSDownloadOperation.h>
 
-@interface ViewController ()
+@interface ViewController ()<HLSDownloadOperationDelegate>
+@property (weak, nonatomic) IBOutlet UIProgressView *progressA;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressB;
+
 @property (nonatomic, copy) NSString *urlString;
 @property (nonatomic, strong) HLSDownloader *downloader;
 @property (nonatomic, strong) HLSDownloadOperation *operation;
@@ -30,26 +33,61 @@
                               priority:0];
      */
     
-    self.operation = [[HLSDownloadOperation alloc] initWithUrlStr:self.urlString];
-    self.operation.m3u8Block = ^(NSString *urlString, id m3u8Info, NSError *error) {
-        NSLog(@">>>info:%@, error:%@",m3u8Info,error);
-    };
-    self.operation.progressBlock = ^(NSString *urlString, NSProgress *downloadProgress) {
-        NSLog(@">>>progress:%.2f",downloadProgress.completedUnitCount/downloadProgress.totalUnitCount * 100);
-    };
-    self.operation.speedBlock = ^(NSString *urlString, NSString *speedDes) {
-        NSLog(@">>>speed:%@",speedDes);
-    };
-    self.operation.tsBlock = ^(NSString *urlString, NSURL *tsUrl, NSString *targetPath, NSUInteger tsIndex, BOOL finished) {
-        NSLog(@">>>tsUrl:%@ targetPath:%@",tsUrl,targetPath);
-    };
-    self.operation.failedBlock = ^(NSString *urlString, NSUInteger tsIndex, NSError *error) {
-        NSLog(@">>>errorCode:%ld",(long)error.code);
-    };
-    [self.operation start];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.operation cancel];
-    });
+    HLSDownloadOperation *operationA = [[HLSDownloadOperation alloc] initWithUrlStr:self.urlString tsStartIndex:40];
+    operationA.opUniqueId = @"A";
+    operationA.delegate = self;
+    
+    HLSDownloadOperation *operationB = [[HLSDownloadOperation alloc] initWithUrlStr:self.urlString];
+    operationB.opUniqueId = @"B";
+    operationB.delegate = self;
+    
+    [queue addOperation:operationA];
+    [queue addOperation:operationB];
+}
+
+#pragma mark - HLSDownloadOperationDelegate
+- (void)hlsDownloadOperation:(HLSDownloadOperation *)op downloadStatusChanged:(HLSOperationState)status
+{
+    if (status == HLSOperationStateReady) {
+        NSLog(@">>>>>>>>>等待中");
+    }else if (status == HLSOperationStateExcuting) {
+        NSLog(@">>>>>>>>>下载中");
+    }else if (status == HLSOperationStateFinished){
+        NSLog(@">>>>>>>>>下载完成");
+    }
+}
+
+- (void)hlsDownloadOperation:(HLSDownloadOperation *)op m3u8:(nullable NSString *)m3u8Str error:(nullable NSError *)error;
+{
+    //NSLog(@">>>uniqueId:%@,error:%@",op.opUniqueId,error);
+}
+
+- (void)hlsDownloadOperation:(HLSDownloadOperation *)op downloadedSize:(int64_t)downloaded totalSize:(int64_t)total;
+{
+    float progress = downloaded * 1.0 / total;
+    if ([op.opUniqueId isEqualToString:@"A"]) {
+        self.progressA.progress = progress;
+        //NSLog(@">>>uniqueId:%@,progress:%.2f",op.opUniqueId,(float)downloaded / total * 100);
+    }else{
+        self.progressB.progress = progress;
+        //NSLog(@">>>uniqueId:%@,progress:%.2f",op.opUniqueId,(float)downloaded / total * 100);
+    }
+}
+
+- (void)hlsDownloadOperation:(HLSDownloadOperation *)op estimateSpeed:(NSString *)speed;
+{
+    NSLog(@">>>uniqueId:%@,speed:%@",op.opUniqueId,speed);
+}
+
+- (void)hlsDownloadOperation:(HLSDownloadOperation *)op tsDownloadedIn:(NSUInteger)tsIndex fromRemoteUrl:(NSURL *)from toLocal:(NSURL *)localUrl;
+{
+    //NSLog(@">>>uniqueId:%@,tsIndex:%lu,localUrl:%@",op.opUniqueId,(unsigned long)tsIndex,localUrl);
+}
+
+- (void)hlsDownloadOperation:(HLSDownloadOperation *)op failedAtIndex:(NSUInteger)tsIndex error:(NSError *)error;
+{
+    //NSLog(@">>>uniqueId:%@,errorCode:%@",op.opUniqueId,(long)error.code);
 }
 @end
