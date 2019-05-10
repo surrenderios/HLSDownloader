@@ -7,13 +7,16 @@
 //
 
 #import "HLSDownloader.h"
+#import "HLSDownloader+private.h"
 #import "HLSDownloadItem+private.h"
 
+#import <AFNetworking/AFNetworkReachabilityManager.h>
+
 @interface HLSDownloader ()
-@property (nonatomic, assign) long long cacheSize;
-@property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, strong) AFURLSessionManager *sessionManager;
+@property (nonatomic, assign) int64_t cacheSize;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, HLSDownloadItem *> *itemDic;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (nonatomic, strong) NSLock *lock;
 @end
 
 @implementation HLSDownloader
@@ -47,62 +50,75 @@
 {
     _enableSpeed = enableSpeed;
     
-    [self.items enumerateObjectsUsingBlock:^(HLSDownloadItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.lock lock];
+    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *item, BOOL *stop) {
         item.enableSpeed = enableSpeed;
     }];
+    [self.lock unlock];
 }
 
 - (void)startDownload:(HLSDownloadItem *)item;
 {
     item.enableSpeed = self.enableSpeed;
-    if (!item.downloadTask) {
-        item.sessionManager = self.sessionManager;
-    }
-    [self.items addObject:item];
+    [self.operationQueue addOperation:item.operation];
     
-    [self controlDownload];
+    [self.itemDic setObject:item forKey:item.uniqueId];
 }
+
 - (void)startDownloadWith:(NSString *)url uniqueId:(NSString *)unique priority:(float)priority;
 {
-    HLSDownloadItem *item = [[HLSDownloadItem alloc] initWithUrl:url uniqueId:unique priority:priority];
+    HLSDownloadItem *item = [[HLSDownloadItem alloc] initWithUrl:url uniqueId:unique priority:0 queue:self.operationQueue];
     [self startDownload:item];
 }
+
 - (void)pauseDownload:(HLSDownloadItem *)item;
 {
-    [item pauseDownload];
-    
-    [self controlDownload];
+    [item pause];
 }
+
 - (void)stopDownload:(HLSDownloadItem *)item;
 {
-    [item stopDownload];
-    
-    [self controlDownload];
+    [item stop];
 }
 
 - (void)startAllDownload;
 {
-    [self controlDownload];
-}
-- (void)pauseAllDownload;
-{
-    [self.items enumerateObjectsUsingBlock:^(HLSDownloadItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (item.status == HLSDownloadItemStatusDownloading || item.status == HLSDownloadItemStatusWaiting) {
-            [item pauseDownload];
+    [self.lock lock];
+    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
+        if (obj.status != HLSDownloadItemStatusDownloading) {
+            [obj start];
         }
     }];
+    [self.lock unlock];
 }
+
+- (void)pauseAllDownload;
+{
+    [self.lock lock];
+    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * key, HLSDownloadItem *obj, BOOL *stop) {
+        if (obj.status == HLSDownloadItemStatusDownloading || obj.status == HLSDownloadItemStatusWaiting) {
+            [obj pause];
+        }
+    }];
+    [self.lock unlock];
+}
+
 - (void)stopAllDownload;
 {
-    [self.items enumerateObjectsUsingBlock:^(HLSDownloadItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
-        [item stopDownload];
+    [self.lock lock];
+    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
+        if (obj.status != HLSDownloadItemStatusFinished) {
+            [obj stop];
+        }
     }];
+    [self.lock unlock];
 }
 
 - (void)removeAllCache;
 {
     [self clear];
 }
+
 - (long long)videoCacheSize;
 {
     return self.cacheSize;
@@ -110,24 +126,27 @@
 
 - (NSArray<HLSDownloadItem *> *)downloadedItems;
 {
+    [self.lock lock];
+    
     __block NSMutableArray *downloaded = [[NSMutableArray alloc] init];
-    [self.items enumerateObjectsUsingBlock:^(HLSDownloadItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (item.status == HLSDownloadItemStatusFinished) {
-            [downloaded addObject:item];
+    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, HLSDownloadItem * _Nonnull obj, BOOL * _Nonnull stop) {
+        if (obj.status == HLSDownloadItemStatusFinished) {
+            [downloaded addObject:obj];
         }
     }];
+    [self.lock unlock];
     
     return downloaded;
 }
+
 - (NSArray<HLSDownloadItem *> *)downloadingItems;
 {
     __block NSMutableArray *downloading = [[NSMutableArray alloc] init];
-    [self.items enumerateObjectsUsingBlock:^(HLSDownloadItem *item, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (item.status != HLSDownloadItemStatusFinished) {
-            [downloading addObject:item];
+    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, HLSDownloadItem * _Nonnull obj, BOOL * _Nonnull stop) {
+        if (obj.status != HLSDownloadItemStatusFinished) {
+            [downloading addObject:obj];
         }
     }];
-    
     return downloading;
 }
 
@@ -137,27 +156,19 @@
     if (self = [super init]) {
         _allowCellular = NO;
         _maxTaskCount = 1;
-        _allowLocalPush = NO;
         _enableSpeed = NO;
         
         _cacheSize = 0;
-        _items = [[NSMutableArray alloc] init];
+        _itemDic = [[NSMutableDictionary alloc] init];
         
         _operationQueue = [[NSOperationQueue alloc] init];
         NSString *queueName = @"HLSDOWNLOADER_QUEUE_NAME";
         _operationQueue.name = queueName;
         _operationQueue.maxConcurrentOperationCount = _maxTaskCount;
+        
+        _lock = [[NSLock alloc] init];
     }
     return self;
-}
-
-- (AFURLSessionManager *)sessionManager
-{
-    if (!_sessionManager) {
-        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-        _sessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:sessionConfig];
-    }
-    return _sessionManager;
 }
 
 - (void)clear
@@ -184,23 +195,5 @@
     }];
     
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
-}
-
-- (void)controlMaxDownloadCount
-{
-#warning todo 控制同时最大的下载数量
-}
-
-- (void)controlDownload
-{
-#warning todo 控制下载的优先级
-    NSUInteger downloading = 0;
-    for(HLSDownloadItem *item in self.items){
-        if (downloading < self.maxTaskCount) {
-            [item startDownload];
-            downloading ++;
-            NSLog(@"startDownload");
-        }
-    }
 }
 @end

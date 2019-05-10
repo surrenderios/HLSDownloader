@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  根据 URL 生成的 MD5
  */
-@property (nonatomic, copy) NSString *opUniqueId;
+@property (nonatomic, copy, readonly) NSString *opUniqueId;
 
 /**
  下载回调

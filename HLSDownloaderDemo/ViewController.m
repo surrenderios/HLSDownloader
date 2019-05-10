@@ -36,11 +36,11 @@
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     
     HLSDownloadOperation *operationA = [[HLSDownloadOperation alloc] initWithUrlStr:self.urlString tsStartIndex:40];
-    operationA.opUniqueId = @"A";
+//    operationA.opUniqueId = @"A";
     operationA.delegate = self;
     
     HLSDownloadOperation *operationB = [[HLSDownloadOperation alloc] initWithUrlStr:self.urlString];
-    operationB.opUniqueId = @"B";
+//    operationB.opUniqueId = @"B";
     operationB.delegate = self;
     
     [queue addOperation:operationA];
