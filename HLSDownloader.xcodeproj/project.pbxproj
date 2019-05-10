@@ -14,11 +14,10 @@
 		FA3BB76822827BF7007F079B /* HLSDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB76622827BF7007F079B /* HLSDownloadOperation.m */; };
 		FA3BB76C2282862B007F079B /* HLSDownloadFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB76A2282862B007F079B /* HLSDownloadFileManager.h */; };
 		FA3BB76D2282862B007F079B /* HLSDownloadFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB76B2282862B007F079B /* HLSDownloadFileManager.m */; };
-		FA3BB77322840A3E007F079B /* HLSDownloaderTool.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB77122840A3E007F079B /* HLSDownloaderTool.h */; };
-		FA3BB77422840A3E007F079B /* HLSDownloaderTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB77222840A3E007F079B /* HLSDownloaderTool.m */; };
-		FA3BB7772284304E007F079B /* HLSDownloader+private.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB7752284304E007F079B /* HLSDownloader+private.h */; };
-		FA3BB7782284304E007F079B /* HLSDownloader+private.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB7762284304E007F079B /* HLSDownloader+private.m */; };
 		FA3BB77A228529EF007F079B /* HLSDownloadItem+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB779228529EF007F079B /* HLSDownloadItem+Private.h */; };
+		FA3BB77E22855D8B007F079B /* HLSDownloadOperationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB77D22855D8B007F079B /* HLSDownloadOperationTest.m */; };
+		FA3BB782228560E7007F079B /* DownloadingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA3BB77F228560E7007F079B /* DownloadingTableViewCell.xib */; };
+		FA3BB783228560E7007F079B /* DownloadingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB781228560E7007F079B /* DownloadingTableViewCell.m */; };
 		FA873ECA22816D080000D6A5 /* HLSM3U8Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = FA873EC922816D080000D6A5 /* HLSM3U8Parser.m */; };
 		FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = FA97CBED2280331E0025C2C6 /* HLSDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FA97CBF9228036D60025C2C6 /* HLSDownloadItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -80,11 +79,11 @@
 		FA3BB76622827BF7007F079B /* HLSDownloadOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloadOperation.m; sourceTree = "<group>"; };
 		FA3BB76A2282862B007F079B /* HLSDownloadFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSDownloadFileManager.h; sourceTree = "<group>"; };
 		FA3BB76B2282862B007F079B /* HLSDownloadFileManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloadFileManager.m; sourceTree = "<group>"; };
-		FA3BB77122840A3E007F079B /* HLSDownloaderTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSDownloaderTool.h; sourceTree = "<group>"; };
-		FA3BB77222840A3E007F079B /* HLSDownloaderTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloaderTool.m; sourceTree = "<group>"; };
-		FA3BB7752284304E007F079B /* HLSDownloader+private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLSDownloader+private.h"; sourceTree = "<group>"; };
-		FA3BB7762284304E007F079B /* HLSDownloader+private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HLSDownloader+private.m"; sourceTree = "<group>"; };
 		FA3BB779228529EF007F079B /* HLSDownloadItem+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLSDownloadItem+Private.h"; sourceTree = "<group>"; };
+		FA3BB77D22855D8B007F079B /* HLSDownloadOperationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloadOperationTest.m; sourceTree = "<group>"; };
+		FA3BB77F228560E7007F079B /* DownloadingTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadingTableViewCell.xib; sourceTree = "<group>"; };
+		FA3BB780228560E7007F079B /* DownloadingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadingTableViewCell.h; sourceTree = "<group>"; };
+		FA3BB781228560E7007F079B /* DownloadingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadingTableViewCell.m; sourceTree = "<group>"; };
 		FA873EC822816D080000D6A5 /* HLSM3U8Parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSM3U8Parser.h; sourceTree = "<group>"; };
 		FA873EC922816D080000D6A5 /* HLSM3U8Parser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSM3U8Parser.m; sourceTree = "<group>"; };
 		FA873F072282729B0000D6A5 /* HLSDownloaderTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HLSDownloaderTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				FA873F092282729B0000D6A5 /* HLSDownloaderTest.m */,
+				FA3BB77D22855D8B007F079B /* HLSDownloadOperationTest.m */,
 				FA873F0B2282729B0000D6A5 /* Info.plist */,
 			);
 			path = HLSDownloaderTest;
@@ -195,6 +195,9 @@
 				FA873F20228275700000D6A5 /* ViewController.h */,
 				FA873F21228275700000D6A5 /* ViewController.m */,
 				FA873F23228275700000D6A5 /* Main.storyboard */,
+				FA3BB780228560E7007F079B /* DownloadingTableViewCell.h */,
+				FA3BB781228560E7007F079B /* DownloadingTableViewCell.m */,
+				FA3BB77F228560E7007F079B /* DownloadingTableViewCell.xib */,
 				FA873F26228275730000D6A5 /* Assets.xcassets */,
 				FA873F28228275730000D6A5 /* LaunchScreen.storyboard */,
 				FA873F2B228275730000D6A5 /* Info.plist */,
@@ -230,10 +233,6 @@
 			children = (
 				FA97CBED2280331E0025C2C6 /* HLSDownloader.h */,
 				FA97CBEE2280331E0025C2C6 /* HLSDownloader.m */,
-				FA3BB7752284304E007F079B /* HLSDownloader+private.h */,
-				FA3BB7762284304E007F079B /* HLSDownloader+private.m */,
-				FA3BB77122840A3E007F079B /* HLSDownloaderTool.h */,
-				FA3BB77222840A3E007F079B /* HLSDownloaderTool.m */,
 				FA97CBF7228036690025C2C6 /* HLSDownloadItem */,
 				FA873EC722816BF30000D6A5 /* HLSM3U8Parser */,
 				FA3BB76922828602007F079B /* HLSDownloadFileManager */,
@@ -260,10 +259,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA3BB77322840A3E007F079B /* HLSDownloaderTool.h in Headers */,
 				FA3BB76722827BF7007F079B /* HLSDownloadOperation.h in Headers */,
 				FA3BB76C2282862B007F079B /* HLSDownloadFileManager.h in Headers */,
-				FA3BB7772284304E007F079B /* HLSDownloader+private.h in Headers */,
 				FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */,
 				FA3BB77A228529EF007F079B /* HLSDownloadItem+Private.h in Headers */,
 				FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */,
@@ -384,6 +381,7 @@
 			files = (
 				FA873F2A228275730000D6A5 /* LaunchScreen.storyboard in Resources */,
 				FA873F27228275730000D6A5 /* Assets.xcassets in Resources */,
+				FA3BB782228560E7007F079B /* DownloadingTableViewCell.xib in Resources */,
 				FA873F25228275700000D6A5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -465,6 +463,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA873F0A2282729B0000D6A5 /* HLSDownloaderTest.m in Sources */,
+				FA3BB77E22855D8B007F079B /* HLSDownloadOperationTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +473,7 @@
 			files = (
 				FA873F22228275700000D6A5 /* ViewController.m in Sources */,
 				FA873F2D228275730000D6A5 /* main.m in Sources */,
+				FA3BB783228560E7007F079B /* DownloadingTableViewCell.m in Sources */,
 				FA873F1F228275700000D6A5 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,10 +484,8 @@
 			files = (
 				FA97CBFB228036D60025C2C6 /* HLSDownloadItem.m in Sources */,
 				FA97CBEF2280331E0025C2C6 /* HLSDownloader.m in Sources */,
-				FA3BB77422840A3E007F079B /* HLSDownloaderTool.m in Sources */,
 				FA873ECA22816D080000D6A5 /* HLSM3U8Parser.m in Sources */,
 				FA3BB76822827BF7007F079B /* HLSDownloadOperation.m in Sources */,
-				FA3BB7782284304E007F079B /* HLSDownloader+private.m in Sources */,
 				FA3BB76D2282862B007F079B /* HLSDownloadFileManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

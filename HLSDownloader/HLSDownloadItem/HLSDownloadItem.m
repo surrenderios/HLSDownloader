@@ -10,15 +10,14 @@
 #import "HLSDownloadItem+Private.h"
 
 @implementation HLSDownloadItem
-#warning todo 设置delegate给task
 
-- (instancetype)initWithUrl:(NSString *)url uniqueId:(nullable NSString *)unique priority:(float)priority queue:(NSOperationQueue *)opQueue;
+- (instancetype)initWithUrl:(NSString *)url uniqueId:(nullable NSString *)unique priority:(NSOperationQueuePriority)priority;
 {
     if (self = [super init]) {
         _downloadUrl = url;
         _uniqueId = (unique.length != 0) ? unique : [self uniqueIdWithUrlString:url];
         _priority = priority;
-        _opQueue = opQueue ? opQueue : [NSOperationQueue mainQueue];
+        
     }
     return self;
 }
@@ -34,10 +33,16 @@
         return;
     }
     
-    if (!self.operation) {
-        self.operation = [[HLSDownloadOperation alloc] initWithUrlStr:self.downloadUrl tsStartIndex:tsIndex];
-        self.operation.delegate = self;
+    // recreate operation
+    NSUInteger inIndex = tsIndex;
+    if (self.operation) {
+        tsIndex = self.operation.tsIndex;
+        self.operation = nil;
     }
+    self.operation = [[HLSDownloadOperation alloc] initWithUrlStr:self.downloadUrl tsStartIndex:inIndex];
+    self.operation.queuePriority = self.priority;
+    self.operation.delegate = self;
+
     [self.opQueue addOperation:self.operation];
     
     [self setStatus:HLSDownloadItemStatusWaiting];
@@ -65,6 +70,16 @@
     }
 }
 
+- (int64_t)size;
+{
+    return self.operation.totalTsByteDownload;
+}
+
+- (void)clearCache
+{
+    
+}
+
 #pragma mark private
 - (instancetype)init
 {
@@ -74,19 +89,30 @@
     return self;
 }
 
+- (NSOperationQueue *)opQueue
+{
+    if (!_opQueue) {
+        _opQueue = [NSOperationQueue mainQueue];
+    }
+    return _opQueue;
+}
+
 - (NSString *)uniqueIdWithUrlString:(NSString *)urlString
 {
-    return @"";
+    return [HLSDownloadOperation md5NameForUrlString:urlString];
 }
 
 - (void)setStatus:(HLSDownloadItemStatus)status
 {
     _status = status;
     
-    if ([self.delegate respondsToSelector:@selector(downloadItem:statusChanged:)]) {
-        [self.delegate downloadItem:self statusChanged:status];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(downloadItem:statusChanged:)]) {
+            [self.delegate downloadItem:self statusChanged:status];
+        }
+    });
 }
+
 
 #pragma mark - delegate
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op downloadStatusChanged:(HLSOperationState)status;
@@ -113,16 +139,20 @@
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op downloadedSize:(int64_t)downloaded totalSize:(int64_t)total;
 {
-    if ([self.delegate respondsToSelector:@selector(downloadItem:size:total:)]) {
-        [self.delegate downloadItem:self size:downloaded total:total];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(downloadItem:size:total:)]) {
+            [self.delegate downloadItem:self size:downloaded total:total];
+        }
+    });
 }
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op estimateSpeed:(NSString *)speed;
 {
-    if ([self.delegate respondsToSelector:@selector(downloadItem:speed:)]) {
-        [self.delegate downloadItem:self speed:speed];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.delegate respondsToSelector:@selector(downloadItem:speed:)]) {
+            [self.delegate downloadItem:self speed:speed];
+        }
+    });
 }
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op tsDownloadedIn:(NSUInteger)tsIndex fromRemoteUrl:(NSURL *)from toLocal:(NSURL *)localUrl;
@@ -139,5 +169,16 @@
     }else{
         [self setStatus:HLSDownloadItemStatusFailed];
     }
+}
+
+#pragma mark -
++ (NSArray *)modelPropertyBlacklist {
+    return @[@"delegate",@"fileMgr",@"opQueue",@"operation"];
+}
+
+#pragma mark -
+- (void)dealloc
+{
+    NSLog(@">>>%s",__FUNCTION__);
 }
 @end

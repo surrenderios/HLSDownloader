@@ -7,16 +7,27 @@
 //
 
 #import "HLSDownloader.h"
-#import "HLSDownloader+private.h"
 #import "HLSDownloadItem+private.h"
 
+#import <YYModel.h>
 #import <AFNetworking/AFNetworkReachabilityManager.h>
 
+#import <UIKit/UIApplication.h>
+
+static dispatch_queue_t hls_downloader_queue(){
+    static dispatch_queue_t hls_downloader_queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        hls_downloader_queue = dispatch_queue_create("com.alex.HLSDownloader", DISPATCH_QUEUE_SERIAL);
+    });
+    return hls_downloader_queue;
+}
+
 @interface HLSDownloader ()
-@property (nonatomic, assign) int64_t cacheSize;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, HLSDownloadItem *> *itemDic;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
-@property (nonatomic, strong) NSLock *lock;
+
+@property (nonatomic, strong) dispatch_queue_t downloaderQueue;
 @end
 
 @implementation HLSDownloader
@@ -50,24 +61,25 @@
 {
     _enableSpeed = enableSpeed;
     
-    [self.lock lock];
-    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *item, BOOL *stop) {
-        item.enableSpeed = enableSpeed;
-    }];
-    [self.lock unlock];
+    dispatch_async(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *item, BOOL *stop) {
+            item.enableSpeed = enableSpeed;
+        }];
+    });
 }
 
 - (void)startDownload:(HLSDownloadItem *)item;
 {
     item.enableSpeed = self.enableSpeed;
-    [self.operationQueue addOperation:item.operation];
-    
     [self.itemDic setObject:item forKey:item.uniqueId];
+    
+    [item start];
 }
 
 - (void)startDownloadWith:(NSString *)url uniqueId:(NSString *)unique priority:(float)priority;
 {
-    HLSDownloadItem *item = [[HLSDownloadItem alloc] initWithUrl:url uniqueId:unique priority:0 queue:self.operationQueue];
+    HLSDownloadItem *item = [[HLSDownloadItem alloc] initWithUrl:url uniqueId:unique priority:0];
+    item.opQueue = self.operationQueue;
     [self startDownload:item];
 }
 
@@ -83,70 +95,80 @@
 
 - (void)startAllDownload;
 {
-    [self.lock lock];
-    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
-        if (obj.status != HLSDownloadItemStatusDownloading) {
-            [obj start];
-        }
-    }];
-    [self.lock unlock];
+    dispatch_async(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
+            if (obj.status != HLSDownloadItemStatusDownloading) {
+                [obj start];
+            }
+        }];
+    });
 }
 
 - (void)pauseAllDownload;
 {
-    [self.lock lock];
-    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * key, HLSDownloadItem *obj, BOOL *stop) {
-        if (obj.status == HLSDownloadItemStatusDownloading || obj.status == HLSDownloadItemStatusWaiting) {
-            [obj pause];
-        }
-    }];
-    [self.lock unlock];
+    dispatch_async(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * key, HLSDownloadItem *obj, BOOL *stop) {
+            if (obj.status == HLSDownloadItemStatusDownloading || obj.status == HLSDownloadItemStatusWaiting) {
+                [obj pause];
+            }
+        }];
+    });
 }
 
 - (void)stopAllDownload;
 {
-    [self.lock lock];
-    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
-        if (obj.status != HLSDownloadItemStatusFinished) {
-            [obj stop];
-        }
-    }];
-    [self.lock unlock];
+    dispatch_async(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
+            if (obj.status != HLSDownloadItemStatusFinished) {
+                [obj stop];
+            }
+        }];
+    });
 }
 
 - (void)removeAllCache;
 {
-    [self clear];
+    dispatch_async(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *  key, HLSDownloadItem *  obj, BOOL *  stop) {
+            [obj clearCache];
+        }];
+    });
 }
 
 - (long long)videoCacheSize;
 {
-    return self.cacheSize;
+    __block int64_t size = 0;
+    dispatch_sync(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *  stop) {
+            size = size + obj.size;
+        }];
+    });
+    return size;
 }
 
 - (NSArray<HLSDownloadItem *> *)downloadedItems;
 {
-    [self.lock lock];
-    
     __block NSMutableArray *downloaded = [[NSMutableArray alloc] init];
-    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, HLSDownloadItem * _Nonnull obj, BOOL * _Nonnull stop) {
-        if (obj.status == HLSDownloadItemStatusFinished) {
-            [downloaded addObject:obj];
-        }
-    }];
-    [self.lock unlock];
-    
+    dispatch_sync(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *  key, HLSDownloadItem *  obj, BOOL *  stop) {
+            if (obj.status == HLSDownloadItemStatusFinished) {
+                [downloaded addObject:obj];
+            }
+        }];
+    });
     return downloaded;
 }
 
 - (NSArray<HLSDownloadItem *> *)downloadingItems;
 {
     __block NSMutableArray *downloading = [[NSMutableArray alloc] init];
-    [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, HLSDownloadItem * _Nonnull obj, BOOL * _Nonnull stop) {
-        if (obj.status != HLSDownloadItemStatusFinished) {
-            [downloading addObject:obj];
-        }
-    }];
+    dispatch_sync(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *  key, HLSDownloadItem *  obj, BOOL *  stop) {
+            if (obj.status != HLSDownloadItemStatusFinished) {
+                [downloading addObject:obj];
+            }
+        }];
+    });
     return downloading;
 }
 
@@ -158,7 +180,6 @@
         _maxTaskCount = 1;
         _enableSpeed = NO;
         
-        _cacheSize = 0;
         _itemDic = [[NSMutableDictionary alloc] init];
         
         _operationQueue = [[NSOperationQueue alloc] init];
@@ -166,14 +187,11 @@
         _operationQueue.name = queueName;
         _operationQueue.maxConcurrentOperationCount = _maxTaskCount;
         
-        _lock = [[NSLock alloc] init];
+        [self addAppObserver];
+        [self unarchiveDowbloaderItem];
+        [self controlNetWorkSwitch];
     }
     return self;
-}
-
-- (void)clear
-{
-    [self stopAllDownload];
 }
 
 - (void)controlNetWorkSwitch
@@ -195,5 +213,63 @@
     }];
     
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+}
+
+#pragma mark - archive
+- (void)addAppObserver
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillEnterBg:) name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillTerminal:) name:UIApplicationWillTerminateNotification
+                                               object:nil];
+}
+
+- (void)applicationWillEnterBg:(NSNotification *)noti
+{
+    [self archiveDownloaderItems];
+}
+
+- (void)applicationWillTerminal:(NSNotification *)noti
+{
+    [self archiveDownloaderItems];
+}
+
+- (void)archiveDownloaderItems;
+{
+    dispatch_async(hls_downloader_queue(), ^{
+        [self _archiveDownloaderItems];
+    });
+}
+
+- (void)unarchiveDowbloaderItem;
+{
+    dispatch_async(hls_downloader_queue(), ^{
+        [self _unarchiveDowbloaderItem];
+    });
+}
+
+- (void)_archiveDownloaderItems
+{
+    NSData *data = [self.itemDic yy_modelToJSONData];
+    if (data.length != 0) {
+        
+    }
+}
+
+- (void)_unarchiveDowbloaderItem
+{
+    NSData *data = [NSData dataWithContentsOfURL:nil];
+    if (data.length != 0) {
+        self.itemDic = [data yy_modelToJSONObject];
+    }
+}
+
+#pragma mark -
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

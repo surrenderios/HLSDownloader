@@ -21,10 +21,11 @@ typedef NS_ENUM(NSUInteger, HLSDownloadItemStatus){
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HLSDownloadItem : NSObject
-@property (nonatomic, assign, readonly) float priority;
 @property (nonatomic, copy, readonly) NSString *uniqueId;
 @property (nonatomic, copy, readonly) NSString *downloadUrl;
 @property (nonatomic, assign, readonly) HLSDownloadItemStatus status;
+@property (nonatomic, assign, readonly) NSOperationQueuePriority priority;
+
 @property (nonatomic, weak) id <HLSDownloadItemDelegate> delegate;
 
 /**
@@ -33,10 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param url 下载的URL
  @param unique 唯一标识符, 为空则会根据URL生成md5
  @param priority 下载的优先级
- @param opQueue 下载队列,为空则会为mainQueue
  @return 下载对象
  */
-- (instancetype)initWithUrl:(NSString *)url uniqueId:(nullable NSString *)unique priority:(float)priority queue:(nullable NSOperationQueue *)opQueue;
+- (instancetype)initWithUrl:(NSString *)url uniqueId:(nullable NSString *)unique priority:(NSOperationQueuePriority)priority;
 @end
 
 @protocol HLSDownloadItemDelegate <NSObject>

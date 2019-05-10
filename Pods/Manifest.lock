@@ -15,20 +15,24 @@ PODS:
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
   - M3U8Kit (0.3.0)
+  - YYModel (1.0.4)
 
 DEPENDENCIES:
   - AFNetworking
   - M3U8Kit
+  - YYModel
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
     - M3U8Kit
+    - YYModel
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   M3U8Kit: 4f410ed3f2530e7b47a9012f778c906d4871fa21
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: 861c4cfdefc631ba8ea501c60da479c853fbac0d
+PODFILE CHECKSUM: eb9c059af93583456d5e1893a42d89349229fb9f
 
 COCOAPODS: 1.5.3

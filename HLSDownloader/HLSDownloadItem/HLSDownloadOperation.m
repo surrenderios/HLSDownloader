@@ -23,7 +23,7 @@ NSError *HLSErrorWithType(NSUInteger type){
 @interface HLSDownloadOperation ()<NSURLSessionDownloadDelegate>
 
 @property (nonatomic, copy) NSString *urlString;
-@property (nonatomic, assign) NSUInteger tsIndex;
+@property (nonatomic, assign, readwrite) NSUInteger tsIndex;
 
 @property (nonatomic, strong) M3U8PlaylistModel *m3u8Model;
 // 由第一个分片的大小*分片的数量来预估,
@@ -34,7 +34,7 @@ NSError *HLSErrorWithType(NSUInteger type){
 
 @property (nonatomic, assign) NSTimeInterval lastWriteTime;
 @property (nonatomic, assign) int64_t singleTsByteWriten;
-@property (nonatomic, assign) int64_t totalTsByteDownload;
+@property (nonatomic, assign, readwrite) int64_t totalTsByteDownload;
 
 @property (nonatomic, assign) HLSOperationState opState;
 @end
@@ -52,7 +52,7 @@ NSError *HLSErrorWithType(NSUInteger type){
         _urlString = urlString;
         _tsIndex =  startIndex;
         _opState = HLSOperationStateReady;
-        _opUniqueId = [self md5NameForUrlString:urlString];
+        _opUniqueId = [[self class]md5NameForUrlString:urlString];
     }
     return self;
 }
@@ -328,7 +328,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
     }
 }
 
-- (NSString *)md5NameForUrlString:(nullable NSString *)key {
++ (NSString *)md5NameForUrlString:(nullable NSString *)key {
     const char *str = key.UTF8String;
     if (str == NULL) {
         str = "";
@@ -345,5 +345,11 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
                           r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
                           r[11], r[12], r[13], r[14], r[15], ext.length == 0 ? @"" : [NSString stringWithFormat:@".%@", ext]];
     return filename;
+}
+
+#pragma mark -
+- (void)dealloc
+{
+    NSLog(@">>>%s",__FUNCTION__);
 }
 @end

@@ -19,6 +19,9 @@ typedef NS_ENUM(NSUInteger, HLSOperationState){
 
 NS_ASSUME_NONNULL_BEGIN
 @interface HLSDownloadOperation : NSOperation
+@property (nonatomic, assign, readonly) NSUInteger tsIndex;
+@property (nonatomic, assign, readonly) int64_t totalTsByteDownload;
+
 /**
  根据 URL 生成的 MD5
  */
@@ -47,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return 下载对象
  */
 - (instancetype)initWithUrlStr:(NSString *)urlString tsStartIndex:(NSUInteger)startIndex;
+
+
++ (NSString *)md5NameForUrlString:(nullable NSString *)key;
 @end
 
 @protocol HLSDownloadOperationDelegate <NSObject>
