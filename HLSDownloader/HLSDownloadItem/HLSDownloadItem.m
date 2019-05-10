@@ -128,9 +128,9 @@
         [self setStatus:HLSDownloadItemStatusDownloading];
     }else{
         if (error.code == -999) {
-            [self setStatus:HLSDownloadItemStatusPaused];
-        }else if(error.code == -1001){
             [self setStatus:HLSDownloadItemStatusLostServer];
+        }else if(error.code == -1001){
+            [self setStatus:HLSDownloadItemStatusPaused];
         }else{
             [self setStatus:HLSDownloadItemStatusFailed];
         }
@@ -163,9 +163,9 @@
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op failedAtIndex:(NSUInteger)tsIndex error:(NSError *)error;
 {
     if (error.code == -999) {
-        [self setStatus:HLSDownloadItemStatusPaused];
-    }else if(error.code == -1001){
         [self setStatus:HLSDownloadItemStatusLostServer];
+    }else if(error.code == -1001){
+        [self setStatus:HLSDownloadItemStatusPaused];
     }else{
         [self setStatus:HLSDownloadItemStatusFailed];
     }

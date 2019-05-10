@@ -184,10 +184,12 @@ NSError *HLSErrorWithType(NSUInteger type){
             if (!error) {
                 self.m3u8Model = model;
                 [self startDownloadTs];
+            }else{
+                self.opState = HLSOperationStateFinished;
             }
             if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:m3u8:error:)]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                   [self.delegate hlsDownloadOperation:self m3u8:nil error:nil];
+                   [self.delegate hlsDownloadOperation:self m3u8:nil error:error];
                 });
             }
         }];
