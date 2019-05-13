@@ -17,7 +17,7 @@
         _downloadUrl = url;
         _uniqueId = (unique.length != 0) ? unique : [self uniqueIdWithUrlString:url];
         _priority = priority;
-        
+        _hlsContainer = [HLSFileContainer shareFileContainer];
     }
     return self;
 }
@@ -99,7 +99,7 @@
 
 - (NSString *)uniqueIdWithUrlString:(NSString *)urlString
 {
-    return [HLSDownloadOperation md5NameForUrlString:urlString];
+    return [HLSDownloadHelper uniqueIdWithString:urlString];
 }
 
 - (void)setStatus:(HLSDownloadItemStatus)status
@@ -126,6 +126,7 @@
 {
     if (!error) {
         [self setStatus:HLSDownloadItemStatusDownloading];
+        [self.hlsContainer cacheM3U8:m3u8Str withUniqueId:self.uniqueId];
     }else{
         if (error.code == -999) {
             [self setStatus:HLSDownloadItemStatusLostServer];
@@ -157,7 +158,7 @@
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op tsDownloadedIn:(NSUInteger)tsIndex fromRemoteUrl:(NSURL *)from toLocal:(NSURL *)localUrl;
 {
-    
+    [self.hlsContainer cacheTsInContainer:self.uniqueId url:from index:tsIndex tempLocalUrl:localUrl];
 }
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op failedAtIndex:(NSUInteger)tsIndex error:(NSError *)error;

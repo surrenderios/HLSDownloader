@@ -7,7 +7,6 @@
 //
 
 #import "HLSDownloadOperation.h"
-#import <CommonCrypto/CommonDigest.h>
 
 #import <M3U8Kit/M3U8Kit.h>
 #import <NSURL+m3u8.h>
@@ -52,7 +51,7 @@ NSError *HLSErrorWithType(NSUInteger type){
         _urlString = urlString;
         _tsIndex =  startIndex;
         _opState = HLSOperationStateReady;
-        _opUniqueId = [[self class]md5NameForUrlString:urlString];
+        _opUniqueId = [HLSDownloadHelper uniqueIdWithString:urlString];
     }
     return self;
 }
@@ -189,7 +188,7 @@ NSError *HLSErrorWithType(NSUInteger type){
             }
             if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:m3u8:error:)]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                   [self.delegate hlsDownloadOperation:self m3u8:nil error:error];
+                   [self.delegate hlsDownloadOperation:self m3u8:model.mainMediaPl.originalText error:error];
                 });
             }
         }];
@@ -245,10 +244,16 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location;
 {
+    // 异步回调可能导致 location 被移除,导致缓存失败
+    /*
     if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:tsDownloadedIn:fromRemoteUrl:toLocal:)]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate hlsDownloadOperation:self tsDownloadedIn:self.tsIndex fromRemoteUrl:downloadTask.originalRequest.URL toLocal:location];
         });
+    }
+     */
+    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:tsDownloadedIn:fromRemoteUrl:toLocal:)]) {
+        [self.delegate hlsDownloadOperation:self tsDownloadedIn:self.tsIndex fromRemoteUrl:downloadTask.originalRequest.URL toLocal:location];
     }
     
     self.tsIndex ++;
@@ -328,25 +333,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
             [self.delegate hlsDownloadOperation:self failedAtIndex:self.tsIndex error:error];
         });
     }
-}
-
-+ (NSString *)md5NameForUrlString:(nullable NSString *)key {
-    const char *str = key.UTF8String;
-    if (str == NULL) {
-        str = "";
-    }
-    unsigned char r[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(str, (CC_LONG)strlen(str), r);
-    NSURL *keyURL = [NSURL URLWithString:key];
-    NSString *ext = keyURL ? keyURL.pathExtension : key.pathExtension;
-    // File system has file name length limit, we need to check if ext is too long, we don't add it to the filename
-    if (ext.length > (NAME_MAX - CC_MD5_DIGEST_LENGTH * 2 - 1)) {
-        ext = nil;
-    }
-    NSString *filename = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%@",
-                          r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
-                          r[11], r[12], r[13], r[14], r[15], ext.length == 0 ? @"" : [NSString stringWithFormat:@".%@", ext]];
-    return filename;
 }
 
 #pragma mark -

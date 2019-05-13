@@ -8,13 +8,13 @@
 
 #import <HLSDownloader/HLSDownloader.h>
 #import "HLSDownloadOperation.h"
-#import "HLSDownloadFileManager.h"
+#import "HLSFileContainer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HLSDownloadItem ()<HLSDownloadOperationDelegate>
 @property (nonatomic, assign) BOOL enableSpeed;
-@property (nonatomic, strong) HLSDownloadFileManager *fileMgr;
+@property (nonatomic, strong) HLSFileContainer *hlsContainer;
 @property (nonatomic, strong) NSOperationQueue *opQueue;
 @property (nonatomic, strong, nullable) HLSDownloadOperation *operation;
 

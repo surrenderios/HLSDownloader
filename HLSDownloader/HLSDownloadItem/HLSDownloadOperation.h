@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HLSDownloadHelper.h"
+
 @protocol HLSDownloadOperationDelegate;
 
 extern NSString *const HLSDownloadErrorDomain;
@@ -51,8 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithUrlStr:(NSString *)urlString tsStartIndex:(NSUInteger)startIndex;
 
-
-+ (NSString *)md5NameForUrlString:(nullable NSString *)key;
 @end
 
 @protocol HLSDownloadOperationDelegate <NSObject>
