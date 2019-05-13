@@ -14,25 +14,39 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
+  - CocoaAsyncSocket (7.6.3)
+  - CocoaHTTPServer (2.3):
+    - CocoaAsyncSocket
+    - CocoaLumberjack
+  - CocoaLumberjack (3.5.2):
+    - CocoaLumberjack/Core (= 3.5.2)
+  - CocoaLumberjack/Core (3.5.2)
   - M3U8Kit (0.3.0)
   - YYModel (1.0.4)
 
 DEPENDENCIES:
   - AFNetworking
+  - CocoaHTTPServer
   - M3U8Kit
   - YYModel
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - CocoaAsyncSocket
+    - CocoaHTTPServer
+    - CocoaLumberjack
     - M3U8Kit
     - YYModel
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
+  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
   M3U8Kit: 4f410ed3f2530e7b47a9012f778c906d4871fa21
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: eb9c059af93583456d5e1893a42d89349229fb9f
+PODFILE CHECKSUM: 87d491040fc5fa12e596451482ec9197980234d0
 
 COCOAPODS: 1.5.3
