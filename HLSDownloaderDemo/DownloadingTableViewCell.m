@@ -161,6 +161,9 @@ NS_INLINE UIColor *kProgressUnActiveColor(){
             break;
         case HLSDownloadItemStatusFinished:
             [self prepareForReuse];
+            if (self.completeBlock) {
+                self.completeBlock();
+            }
             break;
         default:
             break;

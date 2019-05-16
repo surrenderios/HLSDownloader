@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *speedOrStateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *downloadedSizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalSizeLabel;
+
+@property (nonatomic, copy) void (^completeBlock)(void);
 @end
 
 NS_ASSUME_NONNULL_END

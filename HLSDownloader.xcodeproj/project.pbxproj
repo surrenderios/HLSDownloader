@@ -12,6 +12,11 @@
 		DDE672419F58DEC8D76A18D3 /* libPods-HLSDownloaderDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05160DFF42A98E9580DE78E8 /* libPods-HLSDownloaderDemo.a */; };
 		FA30C66222894C2B00F12922 /* HLSDownloadHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C66022894C2B00F12922 /* HLSDownloadHelper.h */; };
 		FA30C66322894C2B00F12922 /* HLSDownloadHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FA30C66122894C2B00F12922 /* HLSDownloadHelper.m */; };
+		FA30C678228D096B00F12922 /* HLSFileContainer+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C677228D096B00F12922 /* HLSFileContainer+Private.h */; };
+		FA30C680228D321500F12922 /* HLSHTTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C67E228D321500F12922 /* HLSHTTPConnection.h */; };
+		FA30C681228D321500F12922 /* HLSHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = FA30C67F228D321500F12922 /* HLSHTTPConnection.m */; };
+		FA30C685228D38EF00F12922 /* HLSDownloader+LocalServer.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C683228D38EF00F12922 /* HLSDownloader+LocalServer.h */; };
+		FA30C686228D38EF00F12922 /* HLSDownloader+LocalServer.m in Sources */ = {isa = PBXBuildFile; fileRef = FA30C684228D38EF00F12922 /* HLSDownloader+LocalServer.m */; };
 		FA3BB76722827BF7007F079B /* HLSDownloadOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB76522827BF7007F079B /* HLSDownloadOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA3BB76822827BF7007F079B /* HLSDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB76622827BF7007F079B /* HLSDownloadOperation.m */; };
 		FA3BB76C2282862B007F079B /* HLSFileContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB76A2282862B007F079B /* HLSFileContainer.h */; };
@@ -78,6 +83,11 @@
 		F23C21B9B863170E29AFABF4 /* libPods-HLSDownloader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HLSDownloader.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA30C66022894C2B00F12922 /* HLSDownloadHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSDownloadHelper.h; sourceTree = "<group>"; };
 		FA30C66122894C2B00F12922 /* HLSDownloadHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloadHelper.m; sourceTree = "<group>"; };
+		FA30C677228D096B00F12922 /* HLSFileContainer+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLSFileContainer+Private.h"; sourceTree = "<group>"; };
+		FA30C67E228D321500F12922 /* HLSHTTPConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSHTTPConnection.h; sourceTree = "<group>"; };
+		FA30C67F228D321500F12922 /* HLSHTTPConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSHTTPConnection.m; sourceTree = "<group>"; };
+		FA30C683228D38EF00F12922 /* HLSDownloader+LocalServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLSDownloader+LocalServer.h"; sourceTree = "<group>"; };
+		FA30C684228D38EF00F12922 /* HLSDownloader+LocalServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HLSDownloader+LocalServer.m"; sourceTree = "<group>"; };
 		FA3BB76522827BF7007F079B /* HLSDownloadOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSDownloadOperation.h; sourceTree = "<group>"; };
 		FA3BB76622827BF7007F079B /* HLSDownloadOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloadOperation.m; sourceTree = "<group>"; };
 		FA3BB76A2282862B007F079B /* HLSFileContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HLSFileContainer.h; sourceTree = "<group>"; };
@@ -160,11 +170,23 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		FA30C682228D38A500F12922 /* HLSDownloadLocalServer */ = {
+			isa = PBXGroup;
+			children = (
+				FA30C683228D38EF00F12922 /* HLSDownloader+LocalServer.h */,
+				FA30C684228D38EF00F12922 /* HLSDownloader+LocalServer.m */,
+				FA30C67E228D321500F12922 /* HLSHTTPConnection.h */,
+				FA30C67F228D321500F12922 /* HLSHTTPConnection.m */,
+			);
+			path = HLSDownloadLocalServer;
+			sourceTree = "<group>";
+		};
 		FA3BB76922828602007F079B /* HLSDownloadFileManager */ = {
 			isa = PBXGroup;
 			children = (
 				FA3BB76A2282862B007F079B /* HLSFileContainer.h */,
 				FA3BB76B2282862B007F079B /* HLSFileContainer.m */,
+				FA30C677228D096B00F12922 /* HLSFileContainer+Private.h */,
 			);
 			path = HLSDownloadFileManager;
 			sourceTree = "<group>";
@@ -229,6 +251,7 @@
 				FA30C66122894C2B00F12922 /* HLSDownloadHelper.m */,
 				FA97CBF7228036690025C2C6 /* HLSDownloadItem */,
 				FA3BB76922828602007F079B /* HLSDownloadFileManager */,
+				FA30C682228D38A500F12922 /* HLSDownloadLocalServer */,
 			);
 			path = HLSDownloader;
 			sourceTree = "<group>";
@@ -252,10 +275,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA30C680228D321500F12922 /* HLSHTTPConnection.h in Headers */,
 				FA3BB76722827BF7007F079B /* HLSDownloadOperation.h in Headers */,
 				FA3BB76C2282862B007F079B /* HLSFileContainer.h in Headers */,
 				FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */,
+				FA30C678228D096B00F12922 /* HLSFileContainer+Private.h in Headers */,
 				FA3BB77A228529EF007F079B /* HLSDownloadItem+Private.h in Headers */,
+				FA30C685228D38EF00F12922 /* HLSDownloader+LocalServer.h in Headers */,
 				FA30C66222894C2B00F12922 /* HLSDownloadHelper.h in Headers */,
 				FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */,
 			);
@@ -479,6 +505,8 @@
 				FA97CBFB228036D60025C2C6 /* HLSDownloadItem.m in Sources */,
 				FA30C66322894C2B00F12922 /* HLSDownloadHelper.m in Sources */,
 				FA97CBEF2280331E0025C2C6 /* HLSDownloader.m in Sources */,
+				FA30C686228D38EF00F12922 /* HLSDownloader+LocalServer.m in Sources */,
+				FA30C681228D321500F12922 /* HLSHTTPConnection.m in Sources */,
 				FA3BB76822827BF7007F079B /* HLSDownloadOperation.m in Sources */,
 				FA3BB76D2282862B007F079B /* HLSFileContainer.m in Sources */,
 			);

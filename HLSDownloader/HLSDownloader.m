@@ -7,12 +7,13 @@
 //
 
 #import "HLSDownloader.h"
-#import "HLSDownloadItem+private.h"
+#import "HLSDownloader+LocalServer.h"
 
+#import <UIKit/UIApplication.h>
 #import <YYModel.h>
 #import <AFNetworking/AFNetworkReachabilityManager.h>
 
-#import <UIKit/UIApplication.h>
+#import "HLSDownloadItem+private.h"
 
 static dispatch_queue_t hls_downloader_queue(){
     static dispatch_queue_t hls_downloader_queue;
@@ -28,6 +29,7 @@ static dispatch_queue_t hls_downloader_queue(){
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 
 @property (nonatomic, strong) dispatch_queue_t downloaderQueue;
+
 @end
 
 @implementation HLSDownloader

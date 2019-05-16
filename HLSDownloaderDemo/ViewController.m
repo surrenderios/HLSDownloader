@@ -10,6 +10,8 @@
 #import "DownloadingTableViewCell.h"
 #import <HLSDownloader/HLSDownloader.h>
 
+#import <AVKit/AVPlayerViewController.h>
+
 static NSString *const kCacheDownloadingTableViewIdf = @"kCacheDownloadingTableViewIdf";
 
 @interface ViewController ()
@@ -55,6 +57,11 @@ static NSString *const kCacheDownloadingTableViewIdf = @"kCacheDownloadingTableV
     HLSDownloadItem *item = self.datas[indexPath.item];
     [cell setItem:item];
     
+    __weak typeof(self)weakSelf = self;
+    cell.completeBlock = ^{
+        [weakSelf startplay];
+    };
+    
     return cell;
 }
 
@@ -78,10 +85,29 @@ static NSString *const kCacheDownloadingTableViewIdf = @"kCacheDownloadingTableV
 }
 
 - (IBAction)addDownloadItem:(id)sender {
+    /*
     HLSDownloadItem *item = [[HLSDownloadItem alloc] initWithUrl:self.urlString uniqueId:nil priority:0];
     [self.downloader startDownload:item];
     
     self.datas = [self.downloader downloadingItems];
     [self.tableView reloadData];
+     */
+   [self startplay];
+}
+
+- (void)startplay
+{
+    NSString *localUrlStr = [[HLSDownloader shareDownloader] localCachedUrlForUrlStr:self.urlString uniqueId:nil];
+    NSLog(@">>>>>%@",localUrlStr);
+    
+    NSURL *url = [NSURL URLWithString:localUrlStr];
+    AVPlayer *avPlayer= [AVPlayer playerWithURL:url];
+    
+    AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
+    playerViewController.player = avPlayer;
+    playerViewController.videoGravity = AVLayerVideoGravityResizeAspect;
+    playerViewController.showsPlaybackControls = YES;
+    [playerViewController.player play];
+    [self.navigationController pushViewController:playerViewController animated:YES];
 }
 @end

@@ -185,7 +185,7 @@
             if (!ret) {
                 NSLog(@"cache ts failed %@",error);
             }else{
-                NSLog(@"cache ts success %@",error);
+                NSLog(@">>>%@",targetUrl.path);
             }
         }
     });
@@ -265,7 +265,13 @@
 - (NSURL *)tsPathForUniqueId:(NSString *)uniqueId url:(NSURL *)tsUrl index:(NSUInteger)tsIndex
 {
     NSURL *childContainerUrl = [self childContainerWithUniqueId:uniqueId];
-    NSURL *url = [childContainerUrl URLByAppendingPathComponent:[NSString stringWithFormat:@"%lu.tmp",(unsigned long)tsIndex]];
+    NSURL *url = [childContainerUrl URLByAppendingPathComponent:[NSString stringWithFormat:@"%lu.ts",(unsigned long)tsIndex]];
     return url;
+}
+
+#pragma mark - Private
+- (NSString *)localServerDocu;
+{
+    return self.containerUrl.path;
 }
 @end

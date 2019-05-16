@@ -8,7 +8,7 @@
 
 #import <HLSDownloader/HLSDownloader.h>
 #import "HLSDownloadOperation.h"
-#import "HLSFileContainer.h"
+#import "HLSFileContainer+Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

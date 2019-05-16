@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "HLSDownloadItem.h"
 
+#pragma mark - Download HLS
 @interface HLSDownloader : NSObject
 
 /**
@@ -107,4 +108,29 @@
  @return 等待中,下载中,下载失败的任务
  */
 - (NSArray<HLSDownloadItem *> *)downloadingItems;
+@end
+
+
+#pragma mark - Play Cached HLS Or Playing Along Cacheing
+@interface HLSDownloader ()
+
+/**
+ 根据需要播放的远程服务器 URL 和唯一 ID 获取本地已经缓存的播放服务器 URL
+ 然后将获取到的URL设置给播放器进行播放
+
+ @param urlStr 远程服务器 URL
+ @param uniqueId 标示远程服务器 URL 的唯一 ID
+ @return 本地已经缓存的播放服务器 URL
+ */
+- (NSString *)localCachedUrlForUrlStr:(NSString *)urlStr uniqueId:(nullable NSString *)uniqueId;
+
+/**
+ 根据需要播放的远程服务器 URL 和唯一 ID 获取本地播放服务器 URL
+ 播放时会同时缓存已经播放的内容到本地
+
+ @param urlStr 远程服务器 URL
+ @param uniqueId 标示远程服务器 URL 的唯一 ID
+ @return 获取本地播放服务器 URL
+ */
+- (NSString *)localPlayingAlongCachingUrlForUrlStr:(NSString *)urlStr uniqueId:(nullable NSString *)uniqueId;
 @end
