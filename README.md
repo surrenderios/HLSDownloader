@@ -10,4 +10,4 @@ HLSDownloader is used for downloading m3u8 videos, Save downloaded ts file into 
 4. optimize code
 
 # How to use
-See examples in folder
+See HLSDownloaderDemo
