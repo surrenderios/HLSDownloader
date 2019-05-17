@@ -18,8 +18,9 @@ typedef NS_ENUM(NSUInteger, HLSDownloadItemStatus){
     HLSDownloadItemStatusLostServer,
 };
 
-NS_ASSUME_NONNULL_BEGIN
+extern NSString *const kHLSDownloadItemStatusChangedNotification;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface HLSDownloadItem : NSObject
 @property (nonatomic, copy, readonly) NSString *uniqueId;
 @property (nonatomic, copy, readonly) NSString *downloadUrl;

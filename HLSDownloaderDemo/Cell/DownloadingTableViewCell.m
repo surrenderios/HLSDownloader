@@ -7,6 +7,7 @@
 //
 
 #import "DownloadingTableViewCell.h"
+#import <HLSDownloader/HLSDownloadHelper.h>
 
 NS_INLINE UIColor *kProgressLoadingColor(){
     return [UIColor greenColor];
@@ -94,7 +95,7 @@ NS_INLINE UIColor *kProgressUnActiveColor(){
     }
     
     [self.posterImageView sd_setImageWithURL:[NSURL URLWithString:nil]
-                            placeholderImage:nil];
+                            placeholderImage:[UIImage imageNamed:@"placeholder"]];
     self.nameLabel.text = item.uniqueId;
     self.progressView.trackTintColor = kProgressNormalColor();
     
@@ -198,8 +199,8 @@ NS_INLINE UIColor *kProgressUnActiveColor(){
         if (_beforeDowloadSize > downloadedSize) {
             return;
         }
-        self.downloadedSizeLabel.text = [NSString stringWithFormat:@"%lld",downloadedSize];
-        self.totalSizeLabel.text = [NSString stringWithFormat:@"/%lld",totalSize];
+        self.downloadedSizeLabel.text = [HLSDownloadHelper fileSizeStringFromBytes:downloadedSize];
+        self.totalSizeLabel.text = [NSString stringWithFormat:@"/%@",[HLSDownloadHelper fileSizeStringFromBytes:totalSize]];
         
         if (totalSize != 0) {
             progress = (float)downloadedSize / totalSize;

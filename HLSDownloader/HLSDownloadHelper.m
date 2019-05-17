@@ -9,6 +9,10 @@
 #import "HLSDownloadHelper.h"
 #import <CommonCrypto/CommonDigest.h>
 
+static int64_t kCommonUtilsGigabyte = (1024 * 1024 * 1024);
+static int64_t kCommonUtilsMegabyte = (1024 * 1024);
+static int64_t kCommonUtilsKilobyte = (1024);
+
 @implementation HLSDownloadHelper
 + (NSString *)uniqueIdWithString:(NSString *)playUrl
 {
@@ -36,5 +40,30 @@
                           r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
                           r[11], r[12], r[13], r[14], r[15], ext.length == 0 ? @"" : [NSString stringWithFormat:@".%@", ext]];
     return filename;
+}
+
++ (NSString *)fileSizeStringFromBytes:(NSUInteger)byteSize;
+{
+    if (kCommonUtilsGigabyte <= byteSize) {
+        return [NSString stringWithFormat:@"%@G", [self numberStringFromDouble:(double)byteSize / kCommonUtilsGigabyte]];
+    }
+    if (kCommonUtilsMegabyte <= byteSize) {
+        return [NSString stringWithFormat:@"%@M", [self numberStringFromDouble:(double)byteSize / kCommonUtilsMegabyte]];
+    }
+    if (kCommonUtilsKilobyte <= byteSize) {
+        return [NSString stringWithFormat:@"%@KB", [self numberStringFromDouble:(double)byteSize / kCommonUtilsKilobyte]];
+    }
+    return [NSString stringWithFormat:@"%luB", (unsigned long)byteSize];
+}
+
++ (NSString *)numberStringFromDouble:(const double)num {
+    NSInteger section = round((num - (NSInteger)num) * 100);
+    if (section % 10) {
+        return [NSString stringWithFormat:@"%.1f", num];
+    }
+    if (section > 0) {
+        return [NSString stringWithFormat:@"%.1f", num];
+    }
+    return [NSString stringWithFormat:@"%.0f", num];
 }
 @end

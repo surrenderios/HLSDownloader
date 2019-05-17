@@ -32,7 +32,6 @@ NSError *HLSErrorWithType(NSUInteger type){
 @property (nonatomic, strong) NSURLSessionDownloadTask *curTask;
 
 @property (nonatomic, assign) NSTimeInterval lastWriteTime;
-@property (nonatomic, assign) int64_t singleTsByteWriten;
 @property (nonatomic, assign, readwrite) int64_t totalTsByteDownload;
 
 @property (nonatomic, assign) HLSOperationState opState;
@@ -257,8 +256,6 @@ didFinishDownloadingToURL:(NSURL *)location;
     }
     
     self.tsIndex ++;
-    self.singleTsByteWriten = 0;
-//    self.lastWriteTime = 0;
     [self startDownloadTs];
 }
 
@@ -274,7 +271,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
     }
     
     if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:estimateSpeed:)]) {
-        [self calculateSpeed:totalBytesWritten];
+        [self calculateSpeed:bytesWritten];
     }
 }
 
@@ -294,32 +291,27 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
     });
 }
 
-- (void)calculateSpeed:(int64_t)totalBytesWritten
+- (void)calculateSpeed:(int64_t)bytesWritten
 {
-#warning todo Speed Calculate
-    /*
-    if (self.lastWriteTime == 0 || self.singleTsByteWriten == 0) {
-        self.lastWriteTime = CFAbsoluteTimeGetCurrent();
-        self.singleTsByteWriten = totalBytesWritten;
-        return;
-    }
-     */
-    
     if (self.lastWriteTime == 0) {
         self.lastWriteTime = CFAbsoluteTimeGetCurrent();
         return;
     }
     
     NSTimeInterval time = CFAbsoluteTimeGetCurrent() - self.lastWriteTime;
-    int64_t deltaSize = totalBytesWritten - self.singleTsByteWriten;
-    if (deltaSize > 0) {
-        float speed = deltaSize / 1024 / time;
+    if (bytesWritten > 0) {
+        NSLog(@"%f,%lld",time,bytesWritten);
         NSString *speedDes = nil;
-        if(speed >= 1024){
-            speed = speed / 1024;
-            speedDes = [NSString stringWithFormat:@"%.2f M/S",speed];
-        }else{
+        if (bytesWritten < 1024) {
+            float speed = bytesWritten / time;
+            speedDes = [NSString stringWithFormat:@"%.2f B/S",speed];
+        }
+        else if(bytesWritten < 1024  * 1024){
+            float speed = bytesWritten / 1024 / time;
             speedDes = [NSString stringWithFormat:@"%.2f KB/S",speed];
+        }else{
+            float speed = bytesWritten / 1024 / time;
+            speedDes = [NSString stringWithFormat:@"%.2f M/S",speed];
         }
         self.lastWriteTime = CFAbsoluteTimeGetCurrent();
         
@@ -327,7 +319,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
             [self.delegate hlsDownloadOperation:self estimateSpeed:speedDes];
         });
     }
-    self.singleTsByteWriten = totalBytesWritten;
 }
 
 - (void)callFailedDelegateWithError:(NSError *)error

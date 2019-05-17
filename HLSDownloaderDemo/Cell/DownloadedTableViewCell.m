@@ -26,7 +26,7 @@
 {
     [super setItem:item];
     
-    [self.posterImageView sd_setImageWithURL:[NSURL URLWithString:nil] placeholderImage:nil];
+    [self.posterImageView sd_setImageWithURL:[NSURL URLWithString:nil] placeholderImage:[UIImage imageNamed:@"placeholder"]];
     self.nameLabel.text = item.uniqueId;
 }
 @end

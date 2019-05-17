@@ -9,6 +9,8 @@
 #import "HLSDownloadItem.h"
 #import "HLSDownloadItem+Private.h"
 
+NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemStatusChangedNotification";
+
 @implementation HLSDownloadItem
 
 - (instancetype)initWithUrl:(NSString *)url uniqueId:(nullable NSString *)unique priority:(NSOperationQueuePriority)priority;
@@ -109,6 +111,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([self.delegate respondsToSelector:@selector(downloadItem:statusChanged:)]) {
             [self.delegate downloadItem:self statusChanged:status];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kHLSDownloadItemStatusChangedNotification object:self];
         }
     });
 }

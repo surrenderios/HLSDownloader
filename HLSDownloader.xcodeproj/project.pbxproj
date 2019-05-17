@@ -10,7 +10,7 @@
 		8347A55FCA7703C0BB255E76 /* libPods-HLSDownloader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F23C21B9B863170E29AFABF4 /* libPods-HLSDownloader.a */; };
 		ACCB5B6166EC30D38C344655 /* libPods-HLSDownloaderTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C93C5C0C55A353F00C3E18BA /* libPods-HLSDownloaderTest.a */; };
 		DDE672419F58DEC8D76A18D3 /* libPods-HLSDownloaderDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05160DFF42A98E9580DE78E8 /* libPods-HLSDownloaderDemo.a */; };
-		FA30C66222894C2B00F12922 /* HLSDownloadHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C66022894C2B00F12922 /* HLSDownloadHelper.h */; };
+		FA30C66222894C2B00F12922 /* HLSDownloadHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C66022894C2B00F12922 /* HLSDownloadHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA30C66322894C2B00F12922 /* HLSDownloadHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FA30C66122894C2B00F12922 /* HLSDownloadHelper.m */; };
 		FA30C678228D096B00F12922 /* HLSFileContainer+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C677228D096B00F12922 /* HLSFileContainer+Private.h */; };
 		FA30C680228D321500F12922 /* HLSHTTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = FA30C67E228D321500F12922 /* HLSHTTPConnection.h */; };
@@ -324,11 +324,11 @@
 				FA30C680228D321500F12922 /* HLSHTTPConnection.h in Headers */,
 				FA3BB76722827BF7007F079B /* HLSDownloadOperation.h in Headers */,
 				FA3BB76C2282862B007F079B /* HLSFileContainer.h in Headers */,
+				FA30C66222894C2B00F12922 /* HLSDownloadHelper.h in Headers */,
 				FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */,
 				FA30C678228D096B00F12922 /* HLSFileContainer+Private.h in Headers */,
 				FA3BB77A228529EF007F079B /* HLSDownloadItem+Private.h in Headers */,
 				FA30C685228D38EF00F12922 /* HLSDownloader+LocalServer.h in Headers */,
-				FA30C66222894C2B00F12922 /* HLSDownloadHelper.h in Headers */,
 				FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

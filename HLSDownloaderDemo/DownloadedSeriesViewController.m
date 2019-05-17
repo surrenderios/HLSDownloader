@@ -40,6 +40,8 @@ static NSString *const kDownloadingSeriesCellIdf = @"kDownloadingSeriesCellIdf";
     
     [self setNavigationBarBackButtonWithTitle:@"Add" selector:NSStringFromSelector(@selector(addDownloadItem:))];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:kHLSDownloadItemStatusChangedNotification object:nil];
+    
     [self reloadData];
 }
 
@@ -55,6 +57,8 @@ static NSString *const kDownloadingSeriesCellIdf = @"kDownloadingSeriesCellIdf";
 {
     self.datas = [[NSMutableArray alloc] initWithArray:self.downloader.AllItems];
     [self.tableView reloadData];
+    
+    [self updateWithSelectedCount:0 totalCount:self.datas.count];
 }
 
 - (void)addDownloadItem:(id)sender
@@ -139,6 +143,7 @@ static NSString *const kDownloadingSeriesCellIdf = @"kDownloadingSeriesCellIdf";
         
         [self.downloader stopDownloads:delArray];
         [self reloadData];
+        [self endEdit:nil];
     }
 }
 
@@ -160,5 +165,10 @@ static NSString *const kDownloadingSeriesCellIdf = @"kDownloadingSeriesCellIdf";
     
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = nvBar_leftItem;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

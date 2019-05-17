@@ -244,7 +244,7 @@
          
          UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(4, 0, 44, 44)];
          [btn setTitle:titleName forState:UIControlStateNormal];
-         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
          [btn.titleLabel setFont:[UIFont systemFontOfSize:15]];
          [btn addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
          UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:btn];
