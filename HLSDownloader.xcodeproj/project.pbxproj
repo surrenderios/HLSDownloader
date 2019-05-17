@@ -33,6 +33,7 @@
 		FA42F4F0228E53DE00BE1C87 /* DownloadingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA42F4ED228E53DE00BE1C87 /* DownloadingTableViewCell.xib */; };
 		FA42F4F1228E53DE00BE1C87 /* DownloadingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4EE228E53DE00BE1C87 /* DownloadingTableViewCell.m */; };
 		FA42F4F4228E55BD00BE1C87 /* BaseDownloadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4F2228E55BD00BE1C87 /* BaseDownloadTableViewCell.m */; };
+		FA42F4F6228EBA7000BE1C87 /* HLSDownloader+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = FA42F4F5228EBA7000BE1C87 /* HLSDownloader+Private.h */; };
 		FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = FA97CBED2280331E0025C2C6 /* HLSDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FA97CBF9228036D60025C2C6 /* HLSDownloadItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA873F0A2282729B0000D6A5 /* HLSDownloaderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA873F092282729B0000D6A5 /* HLSDownloaderTest.m */; };
@@ -118,6 +119,7 @@
 		FA42F4EF228E53DE00BE1C87 /* DownloadingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadingTableViewCell.h; sourceTree = "<group>"; };
 		FA42F4F2228E55BD00BE1C87 /* BaseDownloadTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseDownloadTableViewCell.m; sourceTree = "<group>"; };
 		FA42F4F3228E55BD00BE1C87 /* BaseDownloadTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseDownloadTableViewCell.h; sourceTree = "<group>"; };
+		FA42F4F5228EBA7000BE1C87 /* HLSDownloader+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLSDownloader+Private.h"; sourceTree = "<group>"; };
 		FA873F072282729B0000D6A5 /* HLSDownloaderTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HLSDownloaderTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA873F092282729B0000D6A5 /* HLSDownloaderTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloaderTest.m; sourceTree = "<group>"; };
 		FA873F0B2282729B0000D6A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 			children = (
 				FA97CBED2280331E0025C2C6 /* HLSDownloader.h */,
 				FA97CBEE2280331E0025C2C6 /* HLSDownloader.m */,
+				FA42F4F5228EBA7000BE1C87 /* HLSDownloader+Private.h */,
 				FA30C66022894C2B00F12922 /* HLSDownloadHelper.h */,
 				FA30C66122894C2B00F12922 /* HLSDownloadHelper.m */,
 				FA97CBF7228036690025C2C6 /* HLSDownloadItem */,
@@ -328,6 +331,7 @@
 				FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */,
 				FA30C678228D096B00F12922 /* HLSFileContainer+Private.h in Headers */,
 				FA3BB77A228529EF007F079B /* HLSDownloadItem+Private.h in Headers */,
+				FA42F4F6228EBA7000BE1C87 /* HLSDownloader+Private.h in Headers */,
 				FA30C685228D38EF00F12922 /* HLSDownloader+LocalServer.h in Headers */,
 				FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */,
 			);

@@ -19,7 +19,6 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
         _downloadUrl = url;
         _uniqueId = (unique.length != 0) ? unique : [self uniqueIdWithUrlString:url];
         _priority = priority;
-        _hlsContainer = [HLSFileContainer shareFileContainer];
     }
     return self;
 }
@@ -130,7 +129,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 {
     if (!error) {
         [self setStatus:HLSDownloadItemStatusDownloading];
-        [self.hlsContainer cacheM3U8:m3u8Str withUniqueId:self.uniqueId];
+        [self.fileContainer cacheM3U8:m3u8Str withUniqueId:self.uniqueId];
     }else{
         if (error.code == -999) {
             [self setStatus:HLSDownloadItemStatusLostServer];
@@ -162,7 +161,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op tsDownloadedIn:(NSUInteger)tsIndex fromRemoteUrl:(NSURL *)from toLocal:(NSURL *)localUrl;
 {
-    [self.hlsContainer cacheTsInContainer:self.uniqueId url:from index:tsIndex tempLocalUrl:localUrl];
+    [self.fileContainer cacheTsInContainer:self.uniqueId url:from index:tsIndex tempLocalUrl:localUrl];
 }
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op failedAtIndex:(NSUInteger)tsIndex error:(NSError *)error;

@@ -7,13 +7,12 @@
 //
 
 #import "HLSDownloader.h"
+#import "HLSDownloader+Private.h"
 #import "HLSDownloader+LocalServer.h"
 
 #import <UIKit/UIApplication.h>
 #import <YYModel.h>
 #import <AFNetworking/AFNetworkReachabilityManager.h>
-
-#import "HLSDownloadItem+private.h"
 
 static dispatch_queue_t hls_downloader_queue(){
     static dispatch_queue_t hls_downloader_queue;
@@ -27,9 +26,6 @@ static dispatch_queue_t hls_downloader_queue(){
 @interface HLSDownloader ()
 @property (nonatomic, strong) NSMutableDictionary<NSString *, HLSDownloadItem *> *itemDic;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
-
-@property (nonatomic, strong) dispatch_queue_t downloaderQueue;
-
 @end
 
 @implementation HLSDownloader
@@ -72,21 +68,24 @@ static dispatch_queue_t hls_downloader_queue(){
 
 - (void)startDownload:(HLSDownloadItem *)item;
 {
-    // exist same item
-    if ([self.itemDic objectForKey:item.uniqueId]) {
-        return;
-    }
-    
-    item.enableSpeed = self.enableSpeed;
-    [self.itemDic setObject:item forKey:item.uniqueId];
-    
-    [item start];
+    dispatch_async(hls_downloader_queue(), ^{
+        // exist same item
+        if ([self.itemDic objectForKey:item.uniqueId]) {
+            return;
+        }
+        
+        item.enableSpeed = self.enableSpeed;
+        [self.itemDic setObject:item forKey:item.uniqueId];
+        
+        [item start];
+    });
 }
 
 - (void)startDownloadWith:(NSString *)url uniqueId:(NSString *)unique priority:(float)priority;
 {
     HLSDownloadItem *item = [[HLSDownloadItem alloc] initWithUrl:url uniqueId:unique priority:0];
     item.opQueue = self.operationQueue;
+    item.fileContainer = self.fileContainer;
     [self startDownload:item];
 }
 
@@ -98,12 +97,17 @@ static dispatch_queue_t hls_downloader_queue(){
 - (void)stopDownload:(HLSDownloadItem *)item;
 {
     [item stop];
-#warning todo
+    
+    dispatch_async(hls_downloader_queue(), ^{
+        [self.itemDic removeObjectForKey:item.uniqueId];
+    });
 }
 
 - (void)stopDownloads:(NSArray <HLSDownloadItem *> *)items
 {
-#warning todo
+    [items enumerateObjectsUsingBlock:^(HLSDownloadItem *obj, NSUInteger idx, BOOL *stop) {
+        [self stopDownload:obj];
+    }];
 }
 
 - (void)startAllDownload;
@@ -136,16 +140,20 @@ static dispatch_queue_t hls_downloader_queue(){
                 [obj stop];
             }
         }];
+        
+        [self.itemDic removeAllObjects];
     });
 }
 
 - (void)removeAllCache;
 {
-    dispatch_async(hls_downloader_queue(), ^{
+    dispatch_sync(hls_downloader_queue(), ^{
         [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *  key, HLSDownloadItem *  obj, BOOL *  stop) {
             [obj clearCache];
         }];
     });
+    
+    [self reset];
 }
 
 - (long long)videoCacheSize;
@@ -204,18 +212,23 @@ static dispatch_queue_t hls_downloader_queue(){
         _maxTaskCount = 1;
         _enableSpeed = NO;
         
-        _itemDic = [[NSMutableDictionary alloc] init];
-        
         _operationQueue = [[NSOperationQueue alloc] init];
         NSString *queueName = @"HLSDOWNLOADER_QUEUE_NAME";
         _operationQueue.name = queueName;
         _operationQueue.maxConcurrentOperationCount = _maxTaskCount;
+        
+        _fileContainer = [[HLSFileContainer alloc] initWithHLSContainerName:nil];
         
         [self addAppObserver];
         [self unarchiveDowbloaderItem];
         [self controlNetWorkSwitch];
     }
     return self;
+}
+
+- (void)reset
+{
+    [self.itemDic removeAllObjects];
 }
 
 - (void)controlNetWorkSwitch
@@ -258,19 +271,20 @@ static dispatch_queue_t hls_downloader_queue(){
 
 - (void)applicationWillTerminal:(NSNotification *)noti
 {
+    [self pauseAllDownload];
     [self archiveDownloaderItems];
 }
 
 - (void)archiveDownloaderItems;
 {
-    dispatch_async(hls_downloader_queue(), ^{
+    dispatch_sync(hls_downloader_queue(), ^{
         [self _archiveDownloaderItems];
     });
 }
 
 - (void)unarchiveDowbloaderItem;
 {
-    dispatch_async(hls_downloader_queue(), ^{
+    dispatch_sync(hls_downloader_queue(), ^{
         [self _unarchiveDowbloaderItem];
     });
 }
@@ -278,16 +292,17 @@ static dispatch_queue_t hls_downloader_queue(){
 - (void)_archiveDownloaderItems
 {
     NSData *data = [self.itemDic yy_modelToJSONData];
-    if (data.length != 0) {
-        
-    }
+    [self.fileContainer archiveData:data];
 }
 
 - (void)_unarchiveDowbloaderItem
 {
-    NSData *data = [NSData dataWithContentsOfURL:nil];
-    if (data.length != 0) {
-        self.itemDic = [data yy_modelToJSONObject];
+    id obj = [self.fileContainer unarchiveObject];
+    if ([obj isKindOfClass:[NSDictionary class]]) {
+        self.itemDic = [[NSMutableDictionary alloc] initWithDictionary:obj];
+    }
+    else if(!self.itemDic){
+        self.itemDic = [[NSMutableDictionary alloc] init];
     }
 }
 

@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithHLSContainerName:(nullable NSString *)containerName;
 - (void)clearContainer;
 
+#pragma mark - archive data
+- (void)archiveData:(id)data;
+- (id)unarchiveObject;
+
 #pragma mark - childContainer
 - (void)clearChildContainerWithUniqueId:(NSString *)uniqueId;
 

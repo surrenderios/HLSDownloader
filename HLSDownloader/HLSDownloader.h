@@ -66,7 +66,6 @@
  */
 - (void)stopDownload:(HLSDownloadItem *)item;
 
-
 /**
  停止多个下载任务,并删除任务
 

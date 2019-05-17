@@ -7,6 +7,7 @@
 //
 
 #import "HLSDownloader+LocalServer.h"
+#import "HLSDownloader+Private.h"
 
 static NSString *const LocalAddress = @"http://127.0.0.1";
 
@@ -51,7 +52,7 @@ static NSString *const LocalAddress = @"http://127.0.0.1";
         [self.localServer setPort:8080];
         [self.localServer setType:@"_http._tcp."];
         [self.localServer setName:@"HLSDownloader_Local_Server"];
-        [self.localServer setDocumentRoot:[[HLSFileContainer shareFileContainer] localServerDocu]];
+        [self.localServer setDocumentRoot:self.fileContainer.localServerDocu];
         [self.localServer setConnectionClass:[HLSHTTPConnection class]];
     }
     

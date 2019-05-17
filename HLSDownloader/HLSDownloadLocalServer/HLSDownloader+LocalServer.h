@@ -10,7 +10,6 @@
 #import <HTTPServer.h>
 #import "HLSHTTPConnection.h"
 #import "HLSDownloadHelper.h"
-#import "HLSFileContainer+Private.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

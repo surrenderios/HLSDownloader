@@ -62,6 +62,39 @@
     });
 }
 
+
+#pragma mark - archive data
+- (void)archiveData:(id)data;
+{
+    dispatch_sync(self.ioQueue, ^{
+        NSURL *toPath = [self archiveUrl];
+        BOOL removeRet = YES;
+        if ([self.fm fileExistsAtPath:toPath.path]) {
+            removeRet = [self.fm removeItemAtPath:toPath.path error:nil];
+        }
+        
+        if (removeRet) {
+            NSError *error;
+            BOOL  createRet = [data writeToURL:toPath options:NSDataWritingAtomic error:&error];
+            if (!createRet) {
+                NSLog(@"save data failed,error:%@",error);
+            }
+        }
+    });
+}
+
+- (id)unarchiveObject;
+{
+    __block id obj = nil;
+    dispatch_sync(self.ioQueue, ^{
+        NSURL *toPath = [self archiveUrl];
+        if ([self.fm fileExistsAtPath:toPath.path]) {
+            obj = [NSKeyedUnarchiver unarchiveObjectWithFile:toPath.path];
+        }
+    });
+    return obj;
+}
+
 #pragma mark - childContainer
 - (void)clearChildContainerWithUniqueId:(NSString *)uniqueId;
 {
@@ -233,6 +266,12 @@
 {
     NSURL *childContainerUrl = [self.containerUrl URLByAppendingPathComponent:uniqueId];
     return childContainerUrl;
+}
+
+- (NSURL *)archiveUrl
+{
+    NSURL *archiveUrl = [self.containerUrl URLByAppendingPathComponent:@"HLSDownloadStateData.data"];
+    return archiveUrl;
 }
 
 - (void)validateChildContainerWithUniqueId:(NSString *)uniqueId
