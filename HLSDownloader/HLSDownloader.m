@@ -98,6 +98,12 @@ static dispatch_queue_t hls_downloader_queue(){
 - (void)stopDownload:(HLSDownloadItem *)item;
 {
     [item stop];
+#warning todo
+}
+
+- (void)stopDownloads:(NSArray <HLSDownloadItem *> *)items
+{
+#warning todo
 }
 
 - (void)startAllDownload;
@@ -151,6 +157,17 @@ static dispatch_queue_t hls_downloader_queue(){
         }];
     });
     return size;
+}
+
+- (NSArray<HLSDownloadItem *> *)AllItems;
+{
+    __block NSMutableArray *allItems = [[NSMutableArray alloc] init];
+    dispatch_sync(hls_downloader_queue(), ^{
+        [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *  key, HLSDownloadItem *  obj, BOOL *  stop) {
+             [allItems addObject:obj];
+        }];
+    });
+    return allItems;
 }
 
 - (NSArray<HLSDownloadItem *> *)downloadedItems;

@@ -19,4 +19,6 @@ target 'HLSDownloaderDemo' do
     pod 'M3U8Kit'
     pod 'AFNetworking'
     pod 'CocoaHTTPServer'
+    pod 'Masonry'
+    pod 'SDWebImage','~>4.4.5'
 end

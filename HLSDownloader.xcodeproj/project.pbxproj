@@ -23,15 +23,21 @@
 		FA3BB76D2282862B007F079B /* HLSFileContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB76B2282862B007F079B /* HLSFileContainer.m */; };
 		FA3BB77A228529EF007F079B /* HLSDownloadItem+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3BB779228529EF007F079B /* HLSDownloadItem+Private.h */; };
 		FA3BB77E22855D8B007F079B /* HLSDownloadOperationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB77D22855D8B007F079B /* HLSDownloadOperationTest.m */; };
-		FA3BB782228560E7007F079B /* DownloadingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA3BB77F228560E7007F079B /* DownloadingTableViewCell.xib */; };
-		FA3BB783228560E7007F079B /* DownloadingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3BB781228560E7007F079B /* DownloadingTableViewCell.m */; };
+		FA42F4D8228E4D8600BE1C87 /* HLSDemoTestUrls.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA42F4D7228E4D8600BE1C87 /* HLSDemoTestUrls.plist */; };
+		FA42F4DE228E511400BE1C87 /* EditView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4D9228E511400BE1C87 /* EditView.m */; };
+		FA42F4DF228E511400BE1C87 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4DC228E511400BE1C87 /* EditViewController.m */; };
+		FA42F4E2228E512500BE1C87 /* BaseDownloadedSeriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4E0228E512500BE1C87 /* BaseDownloadedSeriesViewController.m */; };
+		FA42F4E5228E512B00BE1C87 /* DownloadedSeriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4E4228E512B00BE1C87 /* DownloadedSeriesViewController.m */; };
+		FA42F4EA228E53A600BE1C87 /* DownloadedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4E8228E53A500BE1C87 /* DownloadedTableViewCell.m */; };
+		FA42F4EB228E53A600BE1C87 /* DownloadedTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA42F4E9228E53A500BE1C87 /* DownloadedTableViewCell.xib */; };
+		FA42F4F0228E53DE00BE1C87 /* DownloadingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA42F4ED228E53DE00BE1C87 /* DownloadingTableViewCell.xib */; };
+		FA42F4F1228E53DE00BE1C87 /* DownloadingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4EE228E53DE00BE1C87 /* DownloadingTableViewCell.m */; };
+		FA42F4F4228E55BD00BE1C87 /* BaseDownloadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA42F4F2228E55BD00BE1C87 /* BaseDownloadTableViewCell.m */; };
 		FA873F00228270BA0000D6A5 /* HLSDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = FA97CBED2280331E0025C2C6 /* HLSDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA873F01228270CE0000D6A5 /* HLSDownloadItem.h in Headers */ = {isa = PBXBuildFile; fileRef = FA97CBF9228036D60025C2C6 /* HLSDownloadItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA873F0A2282729B0000D6A5 /* HLSDownloaderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA873F092282729B0000D6A5 /* HLSDownloaderTest.m */; };
 		FA873F0C2282729B0000D6A5 /* libHLSDownloader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA97CBEA2280331E0025C2C6 /* libHLSDownloader.a */; };
 		FA873F1F228275700000D6A5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FA873F1E228275700000D6A5 /* AppDelegate.m */; };
-		FA873F22228275700000D6A5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA873F21228275700000D6A5 /* ViewController.m */; };
-		FA873F25228275700000D6A5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA873F23228275700000D6A5 /* Main.storyboard */; };
 		FA873F27228275730000D6A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA873F26228275730000D6A5 /* Assets.xcassets */; };
 		FA873F2A228275730000D6A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA873F28228275730000D6A5 /* LaunchScreen.storyboard */; };
 		FA873F2D228275730000D6A5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA873F2C228275730000D6A5 /* main.m */; };
@@ -94,18 +100,30 @@
 		FA3BB76B2282862B007F079B /* HLSFileContainer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSFileContainer.m; sourceTree = "<group>"; };
 		FA3BB779228529EF007F079B /* HLSDownloadItem+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLSDownloadItem+Private.h"; sourceTree = "<group>"; };
 		FA3BB77D22855D8B007F079B /* HLSDownloadOperationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloadOperationTest.m; sourceTree = "<group>"; };
-		FA3BB77F228560E7007F079B /* DownloadingTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadingTableViewCell.xib; sourceTree = "<group>"; };
-		FA3BB780228560E7007F079B /* DownloadingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadingTableViewCell.h; sourceTree = "<group>"; };
-		FA3BB781228560E7007F079B /* DownloadingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadingTableViewCell.m; sourceTree = "<group>"; };
+		FA42F4D7228E4D8600BE1C87 /* HLSDemoTestUrls.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = HLSDemoTestUrls.plist; sourceTree = "<group>"; };
+		FA42F4D9228E511400BE1C87 /* EditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditView.m; sourceTree = "<group>"; };
+		FA42F4DA228E511400BE1C87 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
+		FA42F4DB228E511400BE1C87 /* EditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditView.h; sourceTree = "<group>"; };
+		FA42F4DC228E511400BE1C87 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
+		FA42F4DD228E511400BE1C87 /* EditViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewProtocol.h; sourceTree = "<group>"; };
+		FA42F4E0228E512500BE1C87 /* BaseDownloadedSeriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseDownloadedSeriesViewController.m; sourceTree = "<group>"; };
+		FA42F4E1228E512500BE1C87 /* BaseDownloadedSeriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseDownloadedSeriesViewController.h; sourceTree = "<group>"; };
+		FA42F4E3228E512B00BE1C87 /* DownloadedSeriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadedSeriesViewController.h; sourceTree = "<group>"; };
+		FA42F4E4228E512B00BE1C87 /* DownloadedSeriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadedSeriesViewController.m; sourceTree = "<group>"; };
+		FA42F4E7228E53A500BE1C87 /* DownloadedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadedTableViewCell.h; sourceTree = "<group>"; };
+		FA42F4E8228E53A500BE1C87 /* DownloadedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadedTableViewCell.m; sourceTree = "<group>"; };
+		FA42F4E9228E53A500BE1C87 /* DownloadedTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadedTableViewCell.xib; sourceTree = "<group>"; };
+		FA42F4ED228E53DE00BE1C87 /* DownloadingTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DownloadingTableViewCell.xib; sourceTree = "<group>"; };
+		FA42F4EE228E53DE00BE1C87 /* DownloadingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadingTableViewCell.m; sourceTree = "<group>"; };
+		FA42F4EF228E53DE00BE1C87 /* DownloadingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadingTableViewCell.h; sourceTree = "<group>"; };
+		FA42F4F2228E55BD00BE1C87 /* BaseDownloadTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseDownloadTableViewCell.m; sourceTree = "<group>"; };
+		FA42F4F3228E55BD00BE1C87 /* BaseDownloadTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseDownloadTableViewCell.h; sourceTree = "<group>"; };
 		FA873F072282729B0000D6A5 /* HLSDownloaderTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HLSDownloaderTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA873F092282729B0000D6A5 /* HLSDownloaderTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HLSDownloaderTest.m; sourceTree = "<group>"; };
 		FA873F0B2282729B0000D6A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA873F1B228275700000D6A5 /* HLSDownloaderDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HLSDownloaderDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA873F1D228275700000D6A5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		FA873F1E228275700000D6A5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		FA873F20228275700000D6A5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		FA873F21228275700000D6A5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		FA873F24228275700000D6A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FA873F26228275730000D6A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA873F29228275730000D6A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA873F2B228275730000D6A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -191,6 +209,35 @@
 			path = HLSDownloadFileManager;
 			sourceTree = "<group>";
 		};
+		FA42F4E6228E513500BE1C87 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				FA42F4DB228E511400BE1C87 /* EditView.h */,
+				FA42F4D9228E511400BE1C87 /* EditView.m */,
+				FA42F4DA228E511400BE1C87 /* EditViewController.h */,
+				FA42F4DC228E511400BE1C87 /* EditViewController.m */,
+				FA42F4DD228E511400BE1C87 /* EditViewProtocol.h */,
+				FA42F4E1228E512500BE1C87 /* BaseDownloadedSeriesViewController.h */,
+				FA42F4E0228E512500BE1C87 /* BaseDownloadedSeriesViewController.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		FA42F4EC228E53D000BE1C87 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				FA42F4F3228E55BD00BE1C87 /* BaseDownloadTableViewCell.h */,
+				FA42F4F2228E55BD00BE1C87 /* BaseDownloadTableViewCell.m */,
+				FA42F4E7228E53A500BE1C87 /* DownloadedTableViewCell.h */,
+				FA42F4E8228E53A500BE1C87 /* DownloadedTableViewCell.m */,
+				FA42F4E9228E53A500BE1C87 /* DownloadedTableViewCell.xib */,
+				FA42F4EF228E53DE00BE1C87 /* DownloadingTableViewCell.h */,
+				FA42F4EE228E53DE00BE1C87 /* DownloadingTableViewCell.m */,
+				FA42F4ED228E53DE00BE1C87 /* DownloadingTableViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		FA873F082282729B0000D6A5 /* HLSDownloaderTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,16 +253,15 @@
 			children = (
 				FA873F1D228275700000D6A5 /* AppDelegate.h */,
 				FA873F1E228275700000D6A5 /* AppDelegate.m */,
-				FA873F20228275700000D6A5 /* ViewController.h */,
-				FA873F21228275700000D6A5 /* ViewController.m */,
-				FA873F23228275700000D6A5 /* Main.storyboard */,
-				FA3BB780228560E7007F079B /* DownloadingTableViewCell.h */,
-				FA3BB781228560E7007F079B /* DownloadingTableViewCell.m */,
-				FA3BB77F228560E7007F079B /* DownloadingTableViewCell.xib */,
+				FA42F4E3228E512B00BE1C87 /* DownloadedSeriesViewController.h */,
+				FA42F4E4228E512B00BE1C87 /* DownloadedSeriesViewController.m */,
+				FA42F4EC228E53D000BE1C87 /* Cell */,
+				FA42F4E6228E513500BE1C87 /* Base */,
 				FA873F26228275730000D6A5 /* Assets.xcassets */,
 				FA873F28228275730000D6A5 /* LaunchScreen.storyboard */,
 				FA873F2B228275730000D6A5 /* Info.plist */,
 				FA873F2C228275730000D6A5 /* main.m */,
+				FA42F4D7228E4D8600BE1C87 /* HLSDemoTestUrls.plist */,
 			);
 			path = HLSDownloaderDemo;
 			sourceTree = "<group>";
@@ -399,10 +445,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA42F4D8228E4D8600BE1C87 /* HLSDemoTestUrls.plist in Resources */,
 				FA873F2A228275730000D6A5 /* LaunchScreen.storyboard in Resources */,
+				FA42F4F0228E53DE00BE1C87 /* DownloadingTableViewCell.xib in Resources */,
 				FA873F27228275730000D6A5 /* Assets.xcassets in Resources */,
-				FA3BB782228560E7007F079B /* DownloadingTableViewCell.xib in Resources */,
-				FA873F25228275700000D6A5 /* Main.storyboard in Resources */,
+				FA42F4EB228E53A600BE1C87 /* DownloadedTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,10 +538,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA873F22228275700000D6A5 /* ViewController.m in Sources */,
+				FA42F4F4228E55BD00BE1C87 /* BaseDownloadTableViewCell.m in Sources */,
 				FA873F2D228275730000D6A5 /* main.m in Sources */,
-				FA3BB783228560E7007F079B /* DownloadingTableViewCell.m in Sources */,
+				FA42F4E2228E512500BE1C87 /* BaseDownloadedSeriesViewController.m in Sources */,
+				FA42F4E5228E512B00BE1C87 /* DownloadedSeriesViewController.m in Sources */,
+				FA42F4F1228E53DE00BE1C87 /* DownloadingTableViewCell.m in Sources */,
+				FA42F4DE228E511400BE1C87 /* EditView.m in Sources */,
+				FA42F4DF228E511400BE1C87 /* EditViewController.m in Sources */,
 				FA873F1F228275700000D6A5 /* AppDelegate.m in Sources */,
+				FA42F4EA228E53A600BE1C87 /* DownloadedTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,14 +580,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		FA873F23228275700000D6A5 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FA873F24228275700000D6A5 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FA873F28228275730000D6A5 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "DownloadedSeriesViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +17,15 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor clearColor];
+    
+    DownloadedSeriesViewController *vc = [[DownloadedSeriesViewController alloc] init];
+    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:vc];
+    self.window.rootViewController = navi;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

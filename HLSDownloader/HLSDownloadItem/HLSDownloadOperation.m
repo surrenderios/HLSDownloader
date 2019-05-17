@@ -258,7 +258,7 @@ didFinishDownloadingToURL:(NSURL *)location;
     
     self.tsIndex ++;
     self.singleTsByteWriten = 0;
-    self.lastWriteTime = 0;
+//    self.lastWriteTime = 0;
     [self startDownloadTs];
 }
 
@@ -296,9 +296,17 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
 
 - (void)calculateSpeed:(int64_t)totalBytesWritten
 {
+#warning todo Speed Calculate
+    /*
     if (self.lastWriteTime == 0 || self.singleTsByteWriten == 0) {
         self.lastWriteTime = CFAbsoluteTimeGetCurrent();
         self.singleTsByteWriten = totalBytesWritten;
+        return;
+    }
+     */
+    
+    if (self.lastWriteTime == 0) {
+        self.lastWriteTime = CFAbsoluteTimeGetCurrent();
         return;
     }
     

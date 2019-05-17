@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="DownloadedTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="86"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="85.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z4j-MG-cPC">
+                        <rect key="frame" x="14" y="10" width="112.5" height="65.5"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="z4j-MG-cPC" secondAttribute="height" multiplier="12:7" id="SBn-ML-eXl"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rhs-lC-q6A">
+                        <rect key="frame" x="140.5" y="75.5" width="220.5" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.69803921568627447" green="0.69803921568627447" blue="0.69803921568627447" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2NE-kT-rV1">
+                        <rect key="frame" x="140.5" y="10" width="220.5" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qxZ-Cj-nKR">
+                        <rect key="frame" x="140.5" y="18" width="220.5" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.69803921570000005" green="0.69803921570000005" blue="0.69803921570000005" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_Series" translatesAutoresizingMaskIntoConstraints="NO" id="xNi-X9-A5u">
+                        <rect key="frame" x="24" y="19" width="16" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="16" id="I0e-0C-s6P"/>
+                            <constraint firstAttribute="width" constant="16" id="U5g-2H-B7h"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="qxZ-Cj-nKR" firstAttribute="top" secondItem="2NE-kT-rV1" secondAttribute="bottom" constant="8" id="7MS-nK-Ok7"/>
+                    <constraint firstItem="2NE-kT-rV1" firstAttribute="top" secondItem="z4j-MG-cPC" secondAttribute="top" id="7zz-ai-tvk"/>
+                    <constraint firstItem="qxZ-Cj-nKR" firstAttribute="trailing" secondItem="2NE-kT-rV1" secondAttribute="trailing" id="AtS-u2-5UA"/>
+                    <constraint firstAttribute="trailing" secondItem="2NE-kT-rV1" secondAttribute="trailing" constant="14" id="Fsf-kD-4Do"/>
+                    <constraint firstItem="z4j-MG-cPC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="H2g-r8-ePg"/>
+                    <constraint firstItem="Rhs-lC-q6A" firstAttribute="trailing" secondItem="2NE-kT-rV1" secondAttribute="trailing" id="LRF-0z-hHT"/>
+                    <constraint firstItem="xNi-X9-A5u" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="8" id="PFu-cW-zTy"/>
+                    <constraint firstItem="z4j-MG-cPC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="14" id="Pbg-si-hvk"/>
+                    <constraint firstItem="xNi-X9-A5u" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="8" id="XJM-br-cN1"/>
+                    <constraint firstAttribute="bottom" secondItem="z4j-MG-cPC" secondAttribute="bottom" constant="10" id="ixv-CA-4bK"/>
+                    <constraint firstItem="2NE-kT-rV1" firstAttribute="leading" secondItem="z4j-MG-cPC" secondAttribute="trailing" constant="14" id="lDd-eR-QuY"/>
+                    <constraint firstItem="Rhs-lC-q6A" firstAttribute="leading" secondItem="qxZ-Cj-nKR" secondAttribute="leading" id="smT-rl-IQh"/>
+                    <constraint firstItem="Rhs-lC-q6A" firstAttribute="bottom" secondItem="z4j-MG-cPC" secondAttribute="bottom" id="vCr-TI-8WF"/>
+                    <constraint firstItem="qxZ-Cj-nKR" firstAttribute="leading" secondItem="2NE-kT-rV1" secondAttribute="leading" id="zhl-I1-qEj"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
+            <connections>
+                <outlet property="nameLabel" destination="2NE-kT-rV1" id="mHU-va-gAp"/>
+                <outlet property="posterImageView" destination="z4j-MG-cPC" id="xBK-kS-LKK"/>
+                <outlet property="seriseImageView" destination="xNi-X9-A5u" id="XDO-9Q-KIg"/>
+                <outlet property="seriseLabel" destination="qxZ-Cj-nKR" id="nda-nj-3mZ"/>
+                <outlet property="totalSizeLabel" destination="Rhs-lC-q6A" id="D43-nU-zfd"/>
+            </connections>
+            <point key="canvasLocation" x="138.40000000000001" y="153.82308845577214"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ic_Series" width="15" height="15"/>
+    </resources>
+</document>

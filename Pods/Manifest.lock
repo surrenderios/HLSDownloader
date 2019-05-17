@@ -22,12 +22,18 @@ PODS:
     - CocoaLumberjack/Core (= 3.5.2)
   - CocoaLumberjack/Core (3.5.2)
   - M3U8Kit (0.3.0)
+  - Masonry (1.1.0)
+  - SDWebImage (4.4.6):
+    - SDWebImage/Core (= 4.4.6)
+  - SDWebImage/Core (4.4.6)
   - YYModel (1.0.4)
 
 DEPENDENCIES:
   - AFNetworking
   - CocoaHTTPServer
   - M3U8Kit
+  - Masonry
+  - SDWebImage (~> 4.4.5)
   - YYModel
 
 SPEC REPOS:
@@ -37,6 +43,8 @@ SPEC REPOS:
     - CocoaHTTPServer
     - CocoaLumberjack
     - M3U8Kit
+    - Masonry
+    - SDWebImage
     - YYModel
 
 SPEC CHECKSUMS:
@@ -45,8 +53,10 @@ SPEC CHECKSUMS:
   CocoaHTTPServer: 5624681fc3473d43b18202f635f9b3abb013b530
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
   M3U8Kit: 4f410ed3f2530e7b47a9012f778c906d4871fa21
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: 87d491040fc5fa12e596451482ec9197980234d0
+PODFILE CHECKSUM: be5407589fc2dc0b2e21648aa4b08d102ffaf6e3
 
 COCOAPODS: 1.5.3

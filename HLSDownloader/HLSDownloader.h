@@ -66,6 +66,14 @@
  */
 - (void)stopDownload:(HLSDownloadItem *)item;
 
+
+/**
+ 停止多个下载任务,并删除任务
+
+ @param items 需要删除的任务
+ */
+- (void)stopDownloads:(NSArray <HLSDownloadItem *> *)items;
+
 /**
  开始下载所有添加的任务, 受最大下载任务量约束
  */
@@ -93,6 +101,13 @@
  */
 - (long long)videoCacheSize;
 
+
+/**
+ 获取所有任务
+ 
+ @return 所有下载过的任务
+ */
+- (NSArray<HLSDownloadItem *> *)AllItems;
 
 /**
  获取下载完成的任务
