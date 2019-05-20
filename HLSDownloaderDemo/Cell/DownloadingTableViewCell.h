@@ -3,7 +3,7 @@
 //  MKTV
 //
 //  Created by Alex_Wu on 4/9/19.
-//  Copyright © 2019 北京视达科科技有限公司. All rights reserved.
+//  Copyright © 2019 Alex. All rights reserved.
 //
 
 #import "BaseDownloadTableViewCell.h"
