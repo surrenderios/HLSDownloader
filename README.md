@@ -9,11 +9,22 @@ HLSDownloader is used for downloading m3u8 videos, Save downloaded ts file into 
 
 # How to use
 
-## Use Cocoapods 
+*  Add folder HLSDownloader into your target
 
+* Add Dependency 
+
+```  
+pod 'YYModel'
+pod 'M3U8Kit'
+pod 'AFNetworking'
+pod 'CocoaHTTPServer'
 ```
+**warning: pod M3U8Kit  not updated after bug fixed, see https://github.com/M3U8Kit/M3U8Parser/pull/18 change the code manual**
+
+~~```
 pod 'HLSDownloader'
-```
+```~~
+
 ## Download Movies
 
 *  Import supported  header files
