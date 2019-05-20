@@ -49,6 +49,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
         self.operation = nil;
     }
     self.operation = [[HLSDownloadOperation alloc] initWithUrlStr:self.downloadUrl tsStartIndex:inIndex];
+    self.operation.enableSpeed = self.enableSpeed;
     self.operation.queuePriority = self.priority;
     self.operation.delegate = self;
 
@@ -59,9 +60,8 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 - (void)pause;
 {
-    if (self.operation.isExecuting) {
-        [self.operation cancel];
-    }
+    [self.operation cancel];
+    [self setStatus:HLSDownloadItemStatusPaused];
 }
 
 - (void)resume;
@@ -69,14 +69,14 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
     if (self.operation && !self.operation.isExecuting) {
         [self.opQueue addOperation:self.operation];
     }
+    
+    // setStatus in operation delegate method
 }
 
 - (void)stop;
 {
-    if (self.operation) {
-        [self.operation cancel];
-        self.operation = nil;
-    }
+    [self.operation cancel];
+    self.operation = nil;
 }
 
 - (int64_t)size;
@@ -86,7 +86,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 - (void)clearCache
 {
-    
+#warning todo
 }
 
 #pragma mark private
@@ -124,12 +124,36 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
     });
 }
 
+- (void)setEnableSpeed:(BOOL)enableSpeed
+{
+    _enableSpeed = enableSpeed;
+    
+    self.operation.enableSpeed = enableSpeed;
+}
+
+- (void)mapErrorCodeToState:(NSError *)error
+{
+    if (error.code == -999) {
+        [self setStatus:HLSDownloadItemStatusPaused];
+    }else if(error.code == -1001){
+        [self setStatus:HLSDownloadItemStatusLostServer];
+    }else{
+        [self setStatus:HLSDownloadItemStatusFailed];
+    }
+}
+
 
 #pragma mark - delegate
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op downloadStatusChanged:(HLSOperationState)status;
 {
-    if (status == HLSOperationStateFinished) {
-        [self setStatus:HLSDownloadItemStatusFinished];
+    if (status == HLSOperationStateReady) {
+        
+    }
+    else if (status == HLSOperationStateExcuting){
+        [self setStatus:HLSDownloadItemStatusDownloading];
+    }
+    else if (status == HLSOperationStateFinished){
+        
     }
 }
 
@@ -139,13 +163,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
         [self setStatus:HLSDownloadItemStatusDownloading];
         [self.fileContainer cacheM3U8:m3u8Str withUniqueId:self.uniqueId];
     }else{
-        if (error.code == -999) {
-            [self setStatus:HLSDownloadItemStatusLostServer];
-        }else if(error.code == -1001){
-            [self setStatus:HLSDownloadItemStatusPaused];
-        }else{
-            [self setStatus:HLSDownloadItemStatusFailed];
-        }
+        [self mapErrorCodeToState:error];
     }
 }
 
@@ -177,13 +195,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op failedAtIndex:(NSUInteger)tsIndex error:(NSError *)error;
 {
-    if (error.code == -999) {
-        [self setStatus:HLSDownloadItemStatusLostServer];
-    }else if(error.code == -1001){
-        [self setStatus:HLSDownloadItemStatusPaused];
-    }else{
-        [self setStatus:HLSDownloadItemStatusFailed];
-    }
+    [self mapErrorCodeToState:error];
 }
 
 #pragma mark -

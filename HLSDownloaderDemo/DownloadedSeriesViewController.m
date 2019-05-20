@@ -65,6 +65,8 @@ static NSString *const kDownloadingSeriesCellIdf = @"kDownloadingSeriesCellIdf";
 {
     if (self.urlIndex < self.urls.count) {
         NSString *url = [self.urls objectAtIndex:self.urlIndex];
+        [self.downloader setEnableSpeed:YES];
+        [self.downloader setMaxTaskCount:3];
         [self.downloader startDownloadWith:url uniqueId:nil priority:0];
         [self reloadData];
         

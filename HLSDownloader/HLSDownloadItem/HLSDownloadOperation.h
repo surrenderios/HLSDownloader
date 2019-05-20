@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, HLSOperationState){
 
 NS_ASSUME_NONNULL_BEGIN
 @interface HLSDownloadOperation : NSOperation
+@property (nonatomic, assign) BOOL enableSpeed;
 @property (nonatomic, assign, readonly) NSUInteger tsIndex;
 @property (nonatomic, assign, readonly) int64_t totalTsByteDownload;
 

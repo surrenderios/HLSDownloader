@@ -60,7 +60,6 @@ NSError *HLSErrorWithType(NSUInteger type){
 {
     @synchronized (self) {
         if (self.isCancelled) {
-            self.opState = HLSOperationStateFinished;
             [self resetOperation];
         }else{
             self.opState = HLSOperationStateExcuting;
@@ -98,7 +97,12 @@ NSError *HLSErrorWithType(NSUInteger type){
 
 - (void)resetOperation
 {
+    [self.curTask cancel];
+    self.curTask = nil;
+    [self.session invalidateAndCancel];
+    self.session = nil;
     
+    self.opState = HLSOperationStateFinished;
 }
 
 - (void)cancelOperation
@@ -107,13 +111,6 @@ NSError *HLSErrorWithType(NSUInteger type){
         return;
     }else{
         [super cancel];
-        
-        if (self.curTask) {
-            [self.curTask cancel];
-        }
-        
-        self.opState = HLSOperationStateFinished;
-        
         [self resetOperation];
     }
 }
@@ -176,6 +173,8 @@ NSError *HLSErrorWithType(NSUInteger type){
                 [self.delegate hlsDownloadOperation:self m3u8:nil error:HLSErrorWithType(0)];
             });
         }
+        
+        [self resetOperation];
     }else{
         NSURL *url = [NSURL URLWithString:self.urlString];
         [url loadM3U8AsynchronouslyCompletion:^(M3U8PlaylistModel *model, NSError *error) {
@@ -183,7 +182,7 @@ NSError *HLSErrorWithType(NSUInteger type){
                 self.m3u8Model = model;
                 [self startDownloadTs];
             }else{
-                self.opState = HLSOperationStateFinished;
+                [self resetOperation];
             }
             if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:m3u8:error:)]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -204,7 +203,7 @@ NSError *HLSErrorWithType(NSUInteger type){
             [self startDownloadTsWithUrl:segInfo.mediaURL];
         }
     }else{
-        self.opState = HLSOperationStateFinished;
+        [self resetOperation];
     }
 }
 
@@ -223,7 +222,7 @@ NSError *HLSErrorWithType(NSUInteger type){
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session API_AVAILABLE(ios(7.0), watchos(2.0), tvos(9.0)) API_UNAVAILABLE(macos);
 {
-    
+#warning todo support background download
 }
 #pragma mark - NSURLSessionTaskDelegate
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
@@ -243,14 +242,6 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location;
 {
-    // 异步回调可能导致 location 被移除,导致缓存失败
-    /*
-    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:tsDownloadedIn:fromRemoteUrl:toLocal:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate hlsDownloadOperation:self tsDownloadedIn:self.tsIndex fromRemoteUrl:downloadTask.originalRequest.URL toLocal:location];
-        });
-    }
-     */
     if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:tsDownloadedIn:fromRemoteUrl:toLocal:)]) {
         [self.delegate hlsDownloadOperation:self tsDownloadedIn:self.tsIndex fromRemoteUrl:downloadTask.originalRequest.URL toLocal:location];
     }
@@ -270,8 +261,10 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
         [self calculateProgress:totalBytesWritten all:totalBytesExpectedToWrite];
     }
     
-    if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:estimateSpeed:)]) {
-        [self calculateSpeed:bytesWritten];
+    if (self.enableSpeed) {
+        if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:estimateSpeed:)]) {
+            [self calculateSpeed:bytesWritten];
+        }
     }
 }
 
@@ -326,6 +319,8 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
     if (!error) {
         return;
     }
+
+    [self resetOperation];
     
     if ([self.delegate respondsToSelector:@selector(hlsDownloadOperation:failedAtIndex:error:)]) {
         dispatch_async(dispatch_get_main_queue(), ^{

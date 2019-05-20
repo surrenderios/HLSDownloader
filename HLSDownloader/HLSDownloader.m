@@ -68,11 +68,15 @@ static dispatch_queue_t hls_downloader_queue(){
 
 - (void)startDownload:(HLSDownloadItem *)item;
 {
+    if (item.status == HLSDownloadItemStatusFinished) {
+        return;
+    }
+    
+    if (item.status == HLSDownloadItemStatusDownloading) {
+        return;
+    }
+
     dispatch_async(hls_downloader_queue(), ^{
-        // exist same item
-        if ([self.itemDic objectForKey:item.uniqueId]) {
-            return;
-        }
         
         item.enableSpeed = self.enableSpeed;
         [self.itemDic setObject:item forKey:item.uniqueId];

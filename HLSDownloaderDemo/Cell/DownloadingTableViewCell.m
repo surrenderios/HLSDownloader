@@ -90,9 +90,7 @@ NS_INLINE UIColor *kProgressUnActiveColor(){
 {
     [super setItem:item];
     
-    if (item.delegate == nil) {
-        item.delegate = self;
-    }
+    item.delegate = self;
     
     [self.posterImageView sd_setImageWithURL:[NSURL URLWithString:nil]
                             placeholderImage:[UIImage imageNamed:@"placeholder"]];
@@ -125,7 +123,7 @@ NS_INLINE UIColor *kProgressUnActiveColor(){
             
             self.progressView.progressTintColor = kProgressLoadingColor();
             
-            //self.speedOrStateLabel.text = @"下载中";
+            self.speedOrStateLabel.text = @"下载中";
             self.speedOrStateLabel.textColor = kProgressLoadingColor();
             /*
             self.downloadedSizeLabel.text = nil;
@@ -160,7 +158,7 @@ NS_INLINE UIColor *kProgressUnActiveColor(){
             self.speedOrStateLabel.text = @"0KB/S";
             break;
         case HLSDownloadItemStatusFinished:
-            [self prepareForReuse];
+            
             break;
         default:
             break;
