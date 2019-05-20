@@ -8,8 +8,16 @@
 
 #import "HLSDownloadItem.h"
 #import "HLSDownloadItem+Private.h"
+#import <NSObject+YYModel.h>
 
 NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemStatusChangedNotification";
+
+@interface HLSDownloadItem ()
+@property (nonatomic, copy, readwrite) NSString *uniqueId;
+@property (nonatomic, copy, readwrite) NSString *downloadUrl;
+@property (nonatomic, assign, readwrite) HLSDownloadItemStatus status;
+@property (nonatomic, assign, readwrite) NSOperationQueuePriority priority;
+@end
 
 @implementation HLSDownloadItem
 
@@ -25,7 +33,7 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 - (void)start;
 {
-    [self startAtIndex:0];
+    [self startAtIndex:self.tsIndex];
 }
 
 - (void)startAtIndex:(NSUInteger)tsIndex;
@@ -161,6 +169,9 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 - (void)hlsDownloadOperation:(HLSDownloadOperation *)op tsDownloadedIn:(NSUInteger)tsIndex fromRemoteUrl:(NSURL *)from toLocal:(NSURL *)localUrl;
 {
+    // 记录下载位置
+    self.tsIndex = tsIndex;
+    
     [self.fileContainer cacheTsInContainer:self.uniqueId url:from index:tsIndex tempLocalUrl:localUrl];
 }
 
@@ -177,9 +188,8 @@ NSString *const kHLSDownloadItemStatusChangedNotification = @"kHLSDownloadItemSt
 
 #pragma mark -
 + (NSArray *)modelPropertyBlacklist {
-    return @[@"delegate",@"fileMgr",@"opQueue",@"operation"];
+    return @[@"delegate",@"opQueue",@"operation",@"fileContainer"];
 }
-
 #pragma mark -
 - (void)dealloc
 {

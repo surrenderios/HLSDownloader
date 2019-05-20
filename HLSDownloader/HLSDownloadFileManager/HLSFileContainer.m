@@ -64,7 +64,7 @@
 
 
 #pragma mark - archive data
-- (void)archiveData:(id)data;
+- (void)saveArchivedData:(id)data;
 {
     dispatch_sync(self.ioQueue, ^{
         NSURL *toPath = [self archiveUrl];
@@ -83,13 +83,13 @@
     });
 }
 
-- (id)unarchiveObject;
+- (NSData *)archivedData;
 {
-    __block id obj = nil;
+    __block NSData *obj = nil;
     dispatch_sync(self.ioQueue, ^{
         NSURL *toPath = [self archiveUrl];
         if ([self.fm fileExistsAtPath:toPath.path]) {
-            obj = [NSKeyedUnarchiver unarchiveObjectWithFile:toPath.path];
+            obj = [NSData dataWithContentsOfFile:toPath.path];
         }
     });
     return obj;

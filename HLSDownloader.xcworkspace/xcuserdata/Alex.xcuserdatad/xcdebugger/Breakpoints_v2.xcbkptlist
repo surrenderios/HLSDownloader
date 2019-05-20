@@ -73,62 +73,30 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HLSDownloader/HLSDownloadFileManager/HLSFileContainer.m"
-            timestampString = "579781511.950639"
+            filePath = "Pods/YYModel/YYModel/NSObject+YYModel.m"
+            timestampString = "580016529.384498"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "-archiveData:"
-            landmarkType = "7">
+            startingLineNumber = "1279"
+            endingLineNumber = "1279"
+            landmarkName = "ModelToJSONObjectRecursive"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "HLSDownloader/HLSDownloadFileManager/HLSFileContainer.m"
-            timestampString = "579781511.9510469"
+            filePath = "Pods/YYModel/YYModel/NSObject+YYModel.m"
+            timestampString = "580016529.384567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "-unarchiveObject"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HLSDownloader/HLSDownloader.m"
-            timestampString = "579781511.951319"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
-            landmarkName = "-_unarchiveDowbloaderItem"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "HLSDownloader/HLSDownloader.m"
-            timestampString = "579781511.951372"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "295"
-            endingLineNumber = "295"
-            landmarkName = "-_archiveDownloaderItems"
-            landmarkType = "7">
+            startingLineNumber = "1212"
+            endingLineNumber = "1212"
+            landmarkName = "ModelToJSONObjectRecursive"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

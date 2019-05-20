@@ -112,10 +112,21 @@ static dispatch_queue_t hls_downloader_queue(){
 
 - (void)startAllDownload;
 {
+    [self startAllDownload:NO];
+}
+
+- (void)startAllDownload:(BOOL)isInit;
+{
     dispatch_async(hls_downloader_queue(), ^{
         [self.itemDic enumerateKeysAndObjectsUsingBlock:^(NSString *key, HLSDownloadItem *obj, BOOL *stop) {
-            if (obj.status != HLSDownloadItemStatusDownloading) {
-                [obj start];
+            if (isInit) {
+                if (obj.status == HLSDownloadItemStatusDownloading) {
+                    [obj start];
+                }
+            }else{
+                if (obj.status != HLSDownloadItemStatusDownloading) {
+                    [obj start];
+                }
             }
         }];
     });
@@ -221,7 +232,7 @@ static dispatch_queue_t hls_downloader_queue(){
         
         [self addAppObserver];
         [self unarchiveDowbloaderItem];
-        [self controlNetWorkSwitch];
+        [self controlNetWorkSwitch:YES];
     }
     return self;
 }
@@ -231,15 +242,16 @@ static dispatch_queue_t hls_downloader_queue(){
     [self.itemDic removeAllObjects];
 }
 
-- (void)controlNetWorkSwitch
+- (void)controlNetWorkSwitch:(BOOL)isInit
 {
+    __block BOOL resume = isInit;
     [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusReachableViaWiFi) {
-            [self startAllDownload];
+            [self startAllDownload:resume];
         }
         else if (status == AFNetworkReachabilityStatusReachableViaWWAN){
             if (self.allowCellular) {
-                [self startAllDownload];
+                [self startAllDownload:resume];
             }else{
                 [self pauseAllDownload];
             }
@@ -247,6 +259,8 @@ static dispatch_queue_t hls_downloader_queue(){
         else{
             [self pauseAllDownload];
         }
+        
+        resume = NO;
     }];
     
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
@@ -292,16 +306,20 @@ static dispatch_queue_t hls_downloader_queue(){
 - (void)_archiveDownloaderItems
 {
     NSData *data = [self.itemDic yy_modelToJSONData];
-    [self.fileContainer archiveData:data];
+    [self.fileContainer saveArchivedData:data];
 }
 
 - (void)_unarchiveDowbloaderItem
 {
-    id obj = [self.fileContainer unarchiveObject];
-    if ([obj isKindOfClass:[NSDictionary class]]) {
-        self.itemDic = [[NSMutableDictionary alloc] initWithDictionary:obj];
+    NSData *data = [self.fileContainer archivedData];
+    if (data) {
+        id ret = [NSDictionary yy_modelDictionaryWithClass:[HLSDownloadItem class] json:data];
+        if ([ret isKindOfClass:[NSDictionary class]]) {
+            self.itemDic = [[NSMutableDictionary alloc] initWithDictionary:ret];
+        }
     }
-    else if(!self.itemDic){
+    
+    if (!self.itemDic) {
         self.itemDic = [[NSMutableDictionary alloc] init];
     }
 }

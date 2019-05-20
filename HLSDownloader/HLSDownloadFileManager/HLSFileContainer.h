@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clearContainer;
 
 #pragma mark - archive data
-- (void)archiveData:(id)data;
-- (id)unarchiveObject;
+- (void)saveArchivedData:(id)data;
+- (NSData *)archivedData;
 
 #pragma mark - childContainer
 - (void)clearChildContainerWithUniqueId:(NSString *)uniqueId;

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HLSDownloadItem ()<HLSDownloadOperationDelegate>
 @property (nonatomic, assign) BOOL enableSpeed;
+@property (nonatomic, assign) NSUInteger tsIndex;
+
 @property (nonatomic, strong) NSOperationQueue *opQueue;
 @property (nonatomic, strong) HLSFileContainer *fileContainer;
 @property (nonatomic, strong, nullable) HLSDownloadOperation *operation;
